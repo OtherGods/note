@@ -1,0 +1,180 @@
+一、背景
+直接压测、调用java工程中的方法。（没有http等的入口）
+
+二、java项目改造
+一个java项目，想要压测其中的几个方法。我们需要在该工程中，添加一个压测入口的类，
+
+这个类必须继承或者实现jmeter提供的接口/类。
+
+举例子，如原来的一个maven项目。
+
+![img](D:\Tyora\AssociatedPicturesInTheArticles\jmeter 压测Java代码\4ca3a7c1b3a742d3a4ae40ce641160ce.png)
+
+ 在HelloWorld类下，有个hi 的方法。 传入 name，返回 hi+name。
+
+```java
+package cn.cs.hello;
+
+public class HelloWorld {
+    public String hi(String name){
+        return "hi"+name;
+    }
+}
+```
+
+我们想要对 hi方法，使用jmeter进行压测。
+
+2.1 依赖 
+需要在pom文件中新增两个依赖。
+
+```java
+    <dependency>
+        <groupId>org.apache.jmeter</groupId>
+        <artifactId>ApacheJMeter_core</artifactId>
+        <version>3.0</version>
+    </dependency>
+    <dependency>
+        <groupId>org.apache.jmeter</groupId>
+        <artifactId>ApacheJMeter_java</artifactId>
+        <version>3.0</version>
+    </dependency>
+```
+2.2 新建压测入口
+新建一个TestHello 类，作为压测的入口。 这个类，必须实现 接口JavaSamplerClient。
+
+```java
+package cn.cs.test;
+
+
+import cn.cs.hello.HelloWorld;
+import org.apache.jmeter.config.Arguments;
+import org.apache.jmeter.protocol.java.sampler.JavaSamplerClient;
+import org.apache.jmeter.protocol.java.sampler.JavaSamplerContext;
+import org.apache.jmeter.samplers.SampleResult;
+
+public class TestHello implements JavaSamplerClient {
+    @Override
+    public void setupTest(JavaSamplerContext javaSamplerContext) {
+
+    }
+     
+    @Override
+    public SampleResult runTest(JavaSamplerContext javaSamplerContext) {
+        // 创建一个jmeter 要求的返回类型SampleResult
+        SampleResult sr = new SampleResult();
+     
+        try{
+            sr.sampleStart();
+            HelloWorld helloWorld = new HelloWorld();
+            // 获取java请求的参数
+            String name=javaSamplerContext.getParameter("张三");
+            String str = helloWorld.hi(name);
+            // 给jmeter 设置响应结果。 将str设置为响应结果。null 这应该应该填结果的编码，我们这里填null也可以。
+            sr.setResponseData(str,null);
+            // 设置是否成功
+            sr.setSuccessful(true);
+     
+        } catch (Exception e){
+            // 设置 为失败，的返回结果
+            sr.setSuccessful(false);
+            // 设置SampleData 为异常信息
+            sr.setSamplerData(e.getMessage());
+            // 打印异常栈
+            e.printStackTrace();
+     
+        }
+        sr.sampleEnd();
+     
+        return sr;
+    }
+     
+    @Override
+    public void teardownTest(JavaSamplerContext javaSamplerContext) {
+     
+    }
+     
+    // java请求的参数
+    @Override
+    public Arguments getDefaultParameters() {
+        Arguments arguments = new Arguments();
+        arguments.addArgument("name","张三");
+        return arguments;
+    }
+
+}
+```
+
+
+方法讲解：
+
+getDefaultParameters 方法，设置请求的默认参数
+
+在本次例子中，hi方法，只需要一个name的参数。则jmeter脚本中，传参数也只需要一个。
+
+设置一个默认的name 为张三。 当jmeter没有穿参时，name=张三。
+
+当jmeter传参数时，name取传的值。
+
+方法：public SampleResult runTest(JavaSamplerContext javaSamplerContext)  进行逻辑处理（调用需要压测的方法，及返回结果）
+
+```java
+@Override
+    public SampleResult runTest(JavaSamplerContext javaSamplerContext) {
+        // 创建一个jmeter 要求的返回类型SampleResult
+        SampleResult sr = new SampleResult();
+ 
+        try{
+            sr.sampleStart();
+            HelloWorld helloWorld = new HelloWorld();
+            // 获取java请求的参数
+            String name=javaSamplerContext.getParameter("张三");
+            String str = helloWorld.hi(name);
+            // 给jmeter 设置响应结果。 将str设置为响应结果。null 这应该应该填结果的编码，我们这里填null也可以。
+            sr.setResponseData(str,null);
+            // 设置是否成功
+            sr.setSuccessful(true);
+ 
+        } catch (Exception e){
+            // 设置 为失败，的返回结果
+            sr.setSuccessful(false);
+            // 设置SampleData 为异常信息
+            sr.setSamplerData(e.getMessage());
+            // 打印异常栈
+            e.printStackTrace();
+ 
+        }
+        sr.sampleEnd();
+ 
+        return sr;
+    }
+```
+
+
+
+2.3 然后将maven项目打jar包。
+然后将maven项目打jar包。将这个jar放置到jmeter/lib/ext 目录下。
+
+重启jmeter。在线程组中，添加---取样器--- java请求。
+
+![img](D:\Tyora\AssociatedPicturesInTheArticles\jmeter 压测Java代码\c97c26cc3d854bf292a1530151b24013.png)
+
+ 
+
+在java请求取样器中，选择刚刚放进去的jar包就可以了。
+
+![img](D:\Tyora\AssociatedPicturesInTheArticles\jmeter 压测Java代码\edb6ca2154dc42e6b9d30cca8e522028.png)
+
+ 在传参处写上我们的参数，就像普通的http格式一样。
+
+就可以进行压测了。
+
+三、问题处理
+依赖包ApacheJMeter_core、ApacheJMeter_java 下载不下来。
+
+emm 这个问题我也没搞定。
+
+
+
+————————————————
+版权声明：本文为CSDN博主「做测试的喵酱」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
+原文链接：https://blog.csdn.net/qq_39208536/article/details/128736210
