@@ -423,8 +423,10 @@ public class test{
 
 public class test {  
     public test() {}  
-    public static void main(String args[]) {        //装箱  
-        Integer integer = Integer.valueOf(10);        //拆箱  
+    public static void main(String args[]) {        
+	    //装箱
+        Integer integer = Integer.valueOf(10);        
+        //拆箱
         int i = integer.intValue();    
 	}
 }

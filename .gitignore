@@ -4,12 +4,12 @@ bin-release/
 [Oo]bj/
 [Bb]in/
 
-# 忽略所有文件
-*
+# 锟斤拷锟斤拷锟斤拷锟斤拷锟侥硷拷
+#*
 
-# 要上传的文件类型
-!*/
-# !*.md
+# 要锟较达拷锟斤拷锟侥硷拷锟斤拷锟斤拷
+!**/*
+!*.md
 # !*.pdf
 # !*docx
 # !*doc
@@ -24,13 +24,13 @@ bin-release/
 # !*tif
 # !*tiff
 # !*zip
-# !*pdf
+#!*pdf
 # !*txt
 # !*html
 
 
 # Other files and folders
-.settings/
+# .settings/
 
 # Executables
 *.swf
@@ -39,7 +39,3 @@ bin-release/
 *.apk
 *.flv
 *.mp4
-
-# Project files, i.e. `.project`, `.actionScriptProperties` and `.flexProperties`
-# should NOT be excluded as they contain compiler settings and other important
-# information for Eclipse / Flash Builder.

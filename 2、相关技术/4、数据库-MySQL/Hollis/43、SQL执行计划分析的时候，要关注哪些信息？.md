@@ -15,17 +15,17 @@
 9. ref：用来表示哪些列或常量被用来与key列中命名的索引进行比较。
 10. rows：表示此操作需要扫描的行数，即扫描表中多少行才能得到结果。
 11. filtered：表示此操作过滤中保留的的行数占扫描行数的百分比。 值越小，说明该步骤筛选掉的数据越多。
-12. **Extra：表示其他额外的信息，包括Using index、Using filesort、Using temporary等。**
+12. **Extra：表示其他额外的信息，包括`Using index`、`Using index Condition`、`Using index for skip scan`、`Using filesort`、`Using temporary`等。**
 
 假如我们有如下一张表（MySQL Innodb 5.7）：
 ```sql
-CREATE TABLE `t2` (          
+CREATE TABLE `t2` (
   `id` INT(11),
   `a` varchar(64) NOT NULL,
   `b` varchar(64) NOT NULL,
   `c` varchar(64) NOT NULL,
   `d` varchar(64) NOT NULL,
-  `f` varchar(64) DEFAULT NULL,    
+  `f` varchar(64) DEFAULT NULL,
   PRIMARY KEY(id),
   UNIQUE KEY `f` (`f`),
   KEY `idx_abc` (`a`,`b`,`c`)

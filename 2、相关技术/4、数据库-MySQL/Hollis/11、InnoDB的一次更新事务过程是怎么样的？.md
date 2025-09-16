@@ -3,6 +3,7 @@
 参考：
 - [59、什么是buffer pool？](2、相关技术/4、数据库-MySQL/Hollis/59、什么是buffer%20pool？.md)
 - [41、binlog、redolog和undolog区别？](2、相关技术/4、数据库-MySQL/Hollis/41、binlog、redolog和undolog区别？.md)
+- [8、说一说MySQL一条SQL语句的执行过程？](2、相关技术/4、数据库-MySQL/Hollis/8、说一说MySQL一条SQL语句的执行过程？.md)
 
 # 典型回答
 
@@ -10,7 +11,7 @@
 
 1. 在Buffer Pool中读取数据：当InnoDB需要更新一条记录时，*首先会在Buffer Pool中查找该记录是否在内存中。如果没有在内存中，则从磁盘读取该页到Buffer Pool中*。
 2. 记录UndoLog：<font color="Blue" size=5>在修改操作前，InnoDB会在Undo Log中记录修改前的数据</font>。<font color="red" size=5>Undo Log是用来保证事务原子性、隔离性、一致性的一种机制</font>，用于在发生事务回滚等情况时，将修改操作回滚到修改前的状态，以达到事务的原子性和一致性。<font color="blue" size=5>UndoLog的写入最开始写到内存中的，然后由1个后台线程定时刷新到磁盘中的</font>。
-3. 在Buffer Pool中更新：当执行update语句时，**InnoDB会先更新已经读取到Buffer Pool中的数据，而不是直接写入磁盘**。同时，InnoDB会**将修改后的数据页状态设置为“脏页”（Dirty Page）状态**，表示该页已经被修改但尚未写入磁盘。
+3. 在Buffer Pool中更新：当执行update语句时，**InnoDB会先更新已经读取到Buffer Pool中的数据，而不是直接写入磁盘**。同时，InnoDB会**将修改后的数据页状态设置为“脏页”（Dirty Page）状态**，表示该页已经被修改但尚未写入磁盘。刷脏页：[60、buffer pool的读写过程与刷盘时机](2、相关技术/4、数据库-MySQL/Hollis/60、buffer%20pool的读写过程与刷盘时机.md)
 4. 记录RedoLog Buffer：**InnoDB在Buffer Pool中记录修改操作的同时，InnoDB 会先将修改操作写入到 redo log buffer 中**。
 ---
 5. 提交事务：在执行完所有修改操作后，事务被提交。<font color="red" size=5>在提交事务时，InnoDB会将Redo Log写入磁盘，以保证事务持久性</font>。

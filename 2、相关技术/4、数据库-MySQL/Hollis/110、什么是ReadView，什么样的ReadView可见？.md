@@ -10,7 +10,8 @@ ReadView 是 InnoDB 中一个至关重要的概念，<font color="red" size=5>�
 
 那么，具体如何实现的RR和RC的**读数据的时候的不同现象**，就是这个快照；关于快照读和当前读：[20、当前读和快照读有什么区别？](2、相关技术/4、数据库-MySQL/Hollis/20、当前读和快照读有什么区别？.md)
 1. **在读已提交（Read Committed）级别下，==ReadView 会在每次查询时重新创建==，以反映数据库中的最新提交更改。**
-2. **在可重复读（Repeatable Read）级别下，==ReadView 在事务开始时创建一次==，并在整个事务期间保持不变。**
+2. **在可重复读（Repeatable Read）级别下，==ReadView 在事务开始时创建一次==，只要在当前事务中不修改对应行的数据，那么ReadView在整个事务期间保持不变。**
+	- <font color="red" size=5>一个事务中多次快照读只要ReadView相同(即当前事务中没有发生当前读)那么每次读取到的都是相同的快照<font color="blue">(我总结的应该没问题)</font></font>
 
 ReadView的定义在MySQL的不同版本中不一样，拿MySQL 5.7 （8.0也一样）举例，ReadView定义如下[https://github.com/xiaowei520/mysql-5.7.23-source-read/blob/0d99c6709f1d982aa8674dab3fc40848908478fb/storage/innobase/read/read0read.cc#L175](https://github.com/xiaowei520/mysql-5.7.23-source-read/blob/0d99c6709f1d982aa8674dab3fc40848908478fb/storage/innobase/read/read0read.cc#L175)
 ![1.png](https://raw.githubusercontent.com/OtherGods/MaterialImage/main/img/202408152338289.png)

@@ -62,6 +62,10 @@ insert into t1 values(10,1);
 这样bin log同步到备库之后，SQL语句回放时，会先执行 `insert into t1 values(10,99);` ，再执行 `delete from t1 where b < 100;` 。
 
 这时候，数据库中的数据就会变成 EMPTY SET，即没有任何数据。这就导致主库和备库的数据不一致了！！！
+> **==关键要素==**：
+> 	1. RC隔离级别，只有行锁
+> 	2. binlog日志早期格式为statement
+> 	3. 事务2后执行先提交
 
 为了避免这样的问题发生。MySQL就把数据库的默认隔离级别设置成了Repetable Read，那么，Repetable Read的隔离级别下是如何解决这样问题的？
 

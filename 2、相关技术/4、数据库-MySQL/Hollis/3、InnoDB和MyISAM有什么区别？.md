@@ -1,3 +1,5 @@
+#InnoDB #MyISAM
+
 # 典型回答
 
 InnoDB和MyISAM是MySQL中比较常用的两个<font color="red" size=6>存储引擎</font>，**MySQL 在 5.5 之前版本默认存储引擎是 MyISAM，5.5 之后版本默认存储引擎是 InnoDB**，MyISAM适合查询以及插入为主的应用，InnoDB适合频繁修改以及涉及到安全性较高的应用。

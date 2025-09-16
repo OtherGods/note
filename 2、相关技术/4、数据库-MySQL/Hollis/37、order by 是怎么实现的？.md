@@ -97,7 +97,7 @@ select a,d,f from t2 where a = "Hollis" order by d;
 
 ### row_id 排序（也叫双路排序）
 
-这个也比较容易理解，就是说我们在构建sort_buffer的时候，不要把所有的要查询字段都放进去，只把排序字段这主键放进去就行了。
+这个也比较容易理解，就是说我们在构建sort_buffer的时候，不要把所有的要查询字段都放进去，只把排序字段与主键放进去就行了。
 ```sql
 select a,d,f from t2 where a = "Hollis" order by d;
 ```
@@ -119,4 +119,4 @@ select a,d,f from t2 where a = "Hollis" order by d;
 
 其实，row_id是MySQL的一种优化算法，他会优先考虑使用全字段排序，只有在他认为字段长度过长，可能会影响效率时，采用row_id的方式排序。并且，能用sort_buffer搞定的情况，MySQL就不会采用临时文件。
 
-总之就是，速度优先，内存优先、一次回表优先。
+总之就是，<font color="red" size=5>速度优先，内存优先、一次回表优先</font>。
