@@ -1,41 +1,29 @@
-# Build and Release Folders
-bin-debug/
-bin-release/
-[Oo]bj/
-[Bb]in/
+# Git 会遍历所有目录，但只跟踪 .md 等文件
 
-# ���������ļ�
-#*
+# 忽略所有文件
+*
+*.obsidian
+*.idea
 
-# Ҫ�ϴ����ļ�����
-!**/*
+# 取消忽略所有目录（确保Git能进入子目录追踪其中的 .md 文件）
+!*/
+
+# 取消忽略所有以.md等结尾的文件
 !*.md
-# !*.pdf
-# !*docx
-# !*doc
-# !*png
-# !*jpg
-# !*jpeg
-# !*gif
-# !*bmp
-# !*webp
-# !*ico
-# !*svg
-# !*tif
-# !*tiff
-# !*zip
-#!*pdf
+!.gitignore
+
+!*.pdf
+
 # !*txt
-# !*html
+# !*.png
 
-
-# Other files and folders
-# .settings/
-
-# Executables
-*.swf
-*.air
-*.ipa
-*.apk
-*.flv
-*.mp4
+# !*.jpg
+# !*.jpeg
+# !*.gif
+# !*.bmp
+# !*.webp
+# !*.ico
+# !*.svg
+# !*.tif
+# !*.tiff
+# !*.zip
