@@ -2,8 +2,8 @@
 
 # 忽略所有文件
 *
-*.obsidian
 *.idea
+!/.obsidian/
 
 # 取消忽略所有目录（确保Git能进入子目录追踪其中的 .md 文件）
 !*/
@@ -11,12 +11,11 @@
 # 取消忽略所有以.md等结尾的文件
 !*.md
 !.gitignore
-
 !*.pdf
+
 
 # !*txt
 # !*.png
-
 # !*.jpg
 # !*.jpeg
 # !*.gif
