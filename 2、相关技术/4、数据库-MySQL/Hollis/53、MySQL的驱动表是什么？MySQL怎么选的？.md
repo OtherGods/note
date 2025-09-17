@@ -1,3 +1,5 @@
+#驱动表 #优化器决定驱动表 #表大小、是否使用索引、连接语句 #通过执行计划查看那个是驱动表 #强制指定驱动表  
+
 # 典型回答
 
 驱动表是表连接中的基础表，也就是通过驱动表的数据结果集作为循环基础数据，然后一条一条的通过这个结果集的数据作为过滤条件到被驱动表中查询数据，然后再做合并。那么，也就意味着：**驱动表在SQL语句执行的过程中先读取。而被驱动表在SQL语句执行的过程中后读取**。
@@ -20,7 +22,7 @@ MySQL的优化器选择驱动表的原则是：**更好的访问性能和筛选�
 
 ## 如何判断哪张表是驱动表
 
-可以使用explain查看一下SQL的执行计划。在输出的<font color="red" size=5>执行计划中，排在第一行的表是驱动表，排在第二行的表是被驱动表</font>。
+可以使用explain查看一下SQL的执行计划。在输出的<font color="red" size=5>执行计划中，排在<u>第一行的表是驱动表</u>，排在<u>第二行的表是被驱动表</u></font>。
 ![image.png](https://raw.githubusercontent.com/OtherGods/MaterialImage/main/img/202507191815973.png)
 
 如上图，orders表为驱动表，order_details表为非驱动表。
@@ -42,4 +44,4 @@ FROM table1
 STRAIGHT_JOIN table2 ON table1.id = table2.id
 ```
 
-但是，需要注意，STRAIGHT_JOIN只适用于内连接。
+但是，需要注意，**==`STRAIGHT_JOIN`只适用于内连接==**。

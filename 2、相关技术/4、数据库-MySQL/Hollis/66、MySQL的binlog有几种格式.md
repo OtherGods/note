@@ -1,3 +1,5 @@
+#binlog格式 
+
 # 典型回答
 
 [41、binlog、redolog和undolog区别？](2、相关技术/4、数据库-MySQL/Hollis/41、binlog、redolog和undolog区别？.md)

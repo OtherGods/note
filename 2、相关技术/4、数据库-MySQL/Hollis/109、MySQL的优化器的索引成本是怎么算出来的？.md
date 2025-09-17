@@ -1,3 +1,5 @@
+#优化器选择索引的成本 #CPU成本 #IO成本
+
 # 典型回答
 
 [82、为什么MySQL会选错索引，如何解决？](2、相关技术/4、数据库-MySQL/Hollis/82、为什么MySQL会选错索引，如何解决？.md)
@@ -13,7 +15,7 @@ CPU Cost 表示计算的开销，通过`select * from mysql.server_cost`查看�
 ![image.png](https://raw.githubusercontent.com/OtherGods/MaterialImage/main/img/202507202103146.png)
 
 主要包含了：
-- disk_temptable_create_cost：创建磁盘临时表的成本
+- disk_temptable_create_cost：**==创建磁盘临时表的成本==**
 - disk_temptable_row_cost：磁盘临时表中每条记录的成本
 - key_compare_cost：索引键值比较的成本
 - memory_temptable_create_cost：创建内存临时表的成本
@@ -26,7 +28,7 @@ IO Cost 表示引擎层 IO 的开销，通过`select * from mysql.engine_cost`�
 ![image.png](https://raw.githubusercontent.com/OtherGods/MaterialImage/main/img/202507202105065.png)
 
 主要包含了：
-- io_block_read_cost：从磁盘读取一个页的成本
+- io_block_read_cost：**==从磁盘读取一个页的成本==**
 - memory_block_read_cost：从内存读取一个页的成本
 
 可以看到，从磁盘中读取一个页的成本（1）是从内存中读取一个页的成本（0.25）的4倍。

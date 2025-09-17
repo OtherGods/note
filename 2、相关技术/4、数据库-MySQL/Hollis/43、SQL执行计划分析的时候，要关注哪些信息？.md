@@ -1,3 +1,5 @@
+#执行计划 
+
 # 典型回答
 
 下面是一次explain返回的一条SQL语句的执行计划的内容：
@@ -8,14 +10,15 @@
 2. select_type：操作的类型。常见的类型包括SIMPLE、PRIMARY、SUBQUERY、UNION等。不同类型的操作会影响查询的执行效率。
 3. table：当前操作所涉及的表。
 4. partitions：当前操作所涉及的分区。
-5. **type：表示查询时所使用的索引类型，包括ALL、index、range、ref、eq_ref、const、system等。**
+5. **type：表示==查询时所使用的索引类型==，包括ALL、index、range、ref、eq_ref、const、system等。**
 6. **possible_keys：表示可能被查询优化器选择使用的索引。**
-7. **key：表示查询优化器选择使用的索引。**
+7. **key：表示查询==优化器选择使用的索引==。**
 8. key_len：表示索引的长度。索引的长度越短，查询时的效率越高。
 9. ref：用来表示哪些列或常量被用来与key列中命名的索引进行比较。
 10. rows：表示此操作需要扫描的行数，即扫描表中多少行才能得到结果。
-11. filtered：表示此操作过滤中保留的的行数占扫描行数的百分比。 值越小，说明该步骤筛选掉的数据越多。
-12. **Extra：表示其他额外的信息，包括`Using index`、`Using index Condition`、`Using index for skip scan`、`Using filesort`、`Using temporary`等。**
+11. filtered：表示此 **==过滤操作中保留的行数占扫描行数的百分比==**。 值越小，说明where筛选掉的数据越多，该索引越差，这个值越大越好；
+    - `filtered = (最终满足所有条件的行数 / 存储引擎根据当前索引条件返回的行数) × 100%`
+12. **Extra：表示其他==额外信息==，包括`Using index`、`Using index Condition`、`Using index for skip scan`、`Using filesort`、`Using temporary`等。**
 
 假如我们有如下一张表（MySQL Innodb 5.7）：
 ```sql

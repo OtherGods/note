@@ -1,4 +1,4 @@
-#bufferPool #DirectI/O #queryCache 
+#bufferPool #DirectI/O #queryCache #缓存数据页 #内存上一段连续空间 #无论是从磁盘存取还是BufferPool存取都是基于数据页 
 
 对照：[2.4、direct I/O](5、什么是零拷贝？#2.4、direct%20I/O)
 

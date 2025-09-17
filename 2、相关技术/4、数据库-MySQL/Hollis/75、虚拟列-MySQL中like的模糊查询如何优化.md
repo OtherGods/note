@@ -1,3 +1,5 @@
+#虚拟列 
+
 对照函数索引：[96、MySQL用了函数一定会索引失效吗？](2、相关技术/4、数据库-MySQL/Hollis/96、MySQL用了函数一定会索引失效吗？.md)
 
 # 典型回答
@@ -32,7 +34,7 @@ SELECT * FROM `test` WHERE `v_name` LIKE 'cba%'; //相当于反向查询匹配�
 UPDATE `test` SET `v_name` = REVERSE(`name`);
 ```
 
-幸运的是在MySQL5.7.6之后，新增了虚拟列功能（如果不是>=5.7.6，只能用上面的土方法）。为一个列建立一个虚拟列，并为虚拟列建立索引，在查询时where中like条件改为虚拟列，就可以使用索引了。
+幸运的是在MySQL5.7.6之后，新增了 **==虚拟列==** 功能（如果不是>=5.7.6，只能用上面的土方法）。为一个列建立一个虚拟列，并为虚拟列建立索引，在查询时where中like条件改为虚拟列，就可以使用索引了。
 ```sql
 ALTER TABLE `test` ADD COLUMN `v_name` VARCHAR(50) GENERATED ALWAYS AS (REVERSE(`name`)) VIRTUAL; //创建虚拟列
 ALTER TABLE `test` ADD INDEX `idx_name_virt`(`v_name`); //为虚拟列v_name列添加索引

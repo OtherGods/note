@@ -12,7 +12,7 @@
 !*.md
 !.gitignore
 !*.pdf
-
+#!*.java
 
 # !*txt
 # !*.png

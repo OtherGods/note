@@ -1,3 +1,5 @@
+#DDL的优化OnlineDDL 
+
 # 典型回答
 
 DDL，即Data Defination Language，是用于定义数据库结构的操作。DDL操作用于**创建、修改和删除数据库中的表、索引、视图、存储过程、约束等数据库对象，而不涉及实际数据的操作**。以下是一些常见的DDL操作：
@@ -10,7 +12,7 @@ DDL，即Data Defination Language，是用于定义数据库结构的操作。DD
 
 在**MySQL 5.6之前**，所有的**ALTER操作其实是会阻塞DML操作**的，如：**添加/删除字段、添加/删除索引等，都是会锁表**的。
 
-但是在**MySQL 5.6中引入了Online DDL**，OnLineDDL是MySQL5.6提出的**加速DDL**方案，尽最大可能保证DDL期间不阻塞DML动作。但是需要注意，这里说的 ==尽最大可能== 意味着不是所有DDL语句都会使用OnlineDDL加锁。
+但是在**MySQL 5.6中引入了Online DDL**，OnLineDDL是MySQL5.6提出的**加速DDL**方案，**==尽最大可能保证DDL期间不阻塞DML动作==**。但是需要注意，这里说的 *==尽最大可能==* 意味着不是所有DDL语句都会使用OnlineDDL加锁。
 
 Online DDL的优点就是可以减少阻塞，是MySQL的一种内置优化手段，但是需要注意的是，DDL在刚开始和快结束的时候，都需要获取MDL锁，而在获取锁的时候如果有事务未提交，那么DDL就会因为加锁失败而进入阻塞状态，也会造成性能影响。
 

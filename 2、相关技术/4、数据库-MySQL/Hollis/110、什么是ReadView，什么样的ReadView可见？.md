@@ -1,3 +1,5 @@
+#ReadView 
+
 # 典型回答
 
 ReadView 是 InnoDB 中一个至关重要的概念，<font color="red" size=5>它是实现MVCC的基础，同时他也是支持不同的事务隔离级别的基础，<font color="blue" size=5>同时提高系统的并发能力和性能</font>。</font>
