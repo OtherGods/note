@@ -15,7 +15,7 @@
 而随着数据逐渐增多，当**元素个数和hash表中的数组长度一致时**，就会触发rehash动作，这时候，会把哈希表2的容量扩大一倍。然后就开始进入rehash流程。
 ![image.png](https://raw.githubusercontent.com/OtherGods/MaterialImage/main/img/202507121811384.png)
 
-在进入rehash过程中，不会立刻把哈希表1中的数据全部rehash到哈希表2中，而是在后续有新的增删改查操作时，会从头开始进行rehash动作。
+**==在进入rehash过程中，不会立刻把哈希表1中的数据全部rehash到哈希表2中，而是在后续有新的增删改查操作时，会从头开始进行rehash动作==**。
 
 假如，我们现在要新增一个元素：
 ![image.png](https://raw.githubusercontent.com/OtherGods/MaterialImage/main/img/202507121812982.png)
