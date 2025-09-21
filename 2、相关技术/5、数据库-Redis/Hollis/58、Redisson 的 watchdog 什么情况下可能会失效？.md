@@ -1,3 +1,4 @@
+#watchdog失效 #手动设置过期时间 #watchdog线程所在机器宕机或续期失败 
 # 典型回答
 
 [35、Redisson的watch dog机制是怎么样的](2、相关技术/5、数据库-Redis/Hollis/35、Redisson的watch%20dog机制是怎么样的.md)

@@ -1,4 +1,4 @@
-#RedLock 
+#RedLock #RedLock是为了解决reids分布式锁的单点故障 #RedLock并没有完全解决单点故障，在网络分区存在脑裂问题，时钟漂移问题等  
 
 # 1、典型回答
 

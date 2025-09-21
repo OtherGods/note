@@ -1,3 +1,5 @@
+#redis中listpack解决级联更新的方式是将当前元素的大小保存在当前元素中而不是下一个元素中 
+
 # 典型回答
 
 [67、介绍下Redis中的ZipList和他的级联更新问题](2、相关技术/5、数据库-Redis/Hollis/67、介绍下Redis中的ZipList和他的级联更新问题.md)

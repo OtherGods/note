@@ -1,3 +1,5 @@
+#redis的zset在数据量少时（member少于128、每个元素小于64字节）使用ziplist，否则使用skiplist 
+
 # 典型回答
 
 [8、Redis中的Zset是怎么实现的](2、相关技术/5、数据库-Redis/Hollis/8、Redis中的Zset是怎么实现的.md)
@@ -26,6 +28,6 @@ Redis 之所以在数据量少的时候使用ZipList（包括后来的ListPack�
 
 所以，**ZipList的存储更节省空间**，而**SkipList的操作性能会更好**。
 
-所以，**对于少量数据，ZipList更好，因为它的内存开销很小，而且性能也可以接受（N越小，logN和N的差别更小）。但是当数据量大到一定程度时，SkipList的 O(log N) 性能会显著优于ZipList 的 O(N) 性能，尤其是涉及到范围查询和顺序遍历时。**
+所以，**对于少量数据，ZipList更好，因为它的内存开销很小**，而且性能也可以接受（N越小，logN和N的差别更小）。但是**当数据量大到一定程度时，SkipList的 O(log N) 性能会显著优于ZipList 的 O(N) 性能**，尤其是涉及到范围查询和顺序遍历时。
 
-**所以，默认情况下，当元素数量少于128，每个元素的长度都小于64字节的时候，ZSet使用ZipList（ListPack），否则，使用SkipList！**
+所以，默认情况下，当元素数量少于128，每个元素的长度都小于64字节的时候，ZSet使用ZipList（ListPack），否则，使用SkipList！

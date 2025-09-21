@@ -54,7 +54,7 @@ INSERT INTO `hhy`.`t`(`id`, `c`, `d`) VALUES (25, 25, 25);
 开启两个事务分别更新普通索引列c等于10的记录，
 ![image.png](https://raw.githubusercontent.com/OtherGods/MaterialImage/main/img/202507191508386.png)
 
-
-
-
-
+可以配合sql查看死锁：
+```sql
+SHOW ENGINE INNODB STATUS
+```

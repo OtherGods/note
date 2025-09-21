@@ -106,7 +106,6 @@ for (TreeNode<K,V> e = b, next; e != null; e = next) {
 ![image.png](https://raw.githubusercontent.com/OtherGods/MaterialImage/main/img/202507091111026.png)
 ![image.png](https://raw.githubusercontent.com/OtherGods/MaterialImage/main/img/202507091112784.png)
 
-
 # 知识扩展
 
 ## 除了rehash/扩容之外，哪些操作也会将树会退化成链表？

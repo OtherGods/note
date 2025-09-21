@@ -1,3 +1,5 @@
+#大key问题 #操作大key会影响redis性能 #占用内存 #大key的过期删除会影响redis性能 #将大key拆为小key #将大key分散到不同redis分片 
+
 Big Key是Redis中存储了大量数据的Key，不要误以为big key只是表示Key的值很大，他还包括这个Key对应的value占用空间很多的情况，通常在String、list、hash、set、zset等类型中出现的问题比较多。其中String类型就是字符串的值比较大，而其他几个类型就是其中元素过多的情况。
 
 Redis的Big Key可能存在以下几个危害：

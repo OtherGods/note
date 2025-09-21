@@ -1,4 +1,4 @@
-#redis数据结构 
+#redis有序集合 #ziplist #listpack #hash #skiplist 
 
 # 1、典型回答
 
