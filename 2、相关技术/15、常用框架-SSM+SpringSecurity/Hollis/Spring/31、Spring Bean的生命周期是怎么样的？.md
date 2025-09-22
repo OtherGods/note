@@ -1,3 +1,5 @@
+#bean声明周期 #实例化 #初始化 #注册Destruction回调 #使用bean #销毁bean #AbstractAutowireCapableBeanFactory #DisposableBeanAdapter 
+
 # 典型回答
 
 一个Spring的Bean从出生到销毁的全过程就是他的整个生命周期，那么经历以下几个阶段：

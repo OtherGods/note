@@ -1,11 +1,12 @@
+#二级缓存能解决三循环依赖问题 #第三级缓存的作用是为了解耦Bean的初始化和代理的创建 
+
 # 典型回答
 
 其实，使用二级缓存也能解决循环依赖的问题，但是如果完全依靠二级缓存解决循环依赖，意味着当我们依赖了一个代理类的时候，就需要在Bean实例化之后完成AOP代理。而在Spring的设计中，为了解耦Bean的初始化和代理，是通过`AnnotationAwareAspectJAutoProxyCreator`这个后置处理器来在Bean生命周期的最后一步来完成AOP代理的。
 
 但是，在Spring的初始化过程中，他是不知道哪些Bean可能有循环依赖的，那么，这时候Spring面临两个选择：
-
-1. 不管有没有循环依赖，都提前把代理对象创建出来，并将代理对象缓存起来，出现循环依赖时，其他对象直接就可以取到代理对象并注入。
-2. 不提前创建代理对象，在出现循环依赖时，再生成代理对象。这样在没有循环依赖的情况下，Bean就可以按着Spring设计原则的步骤来创建。
+1. **==不管有没有循环依赖，都提前把代理对象创建出来==**，并将代理对象缓存起来，出现循环依赖时，其他对象直接就可以取到代理对象并注入。
+2. **==不提前创建代理对象，在出现循环依赖时，再生成代理对象==**。这样在没有循环依赖的情况下，Bean就可以按着Spring设计原则的步骤来创建。
 
 第一个方案看上去比较简单，只需要二级缓存就可以了。但是他也意味着，Spring需要在所有的bean的创建过程中就要先生成代理对象再初始化；那么这就和spring的aop的设计原则（前文提到的：在Spring的设计中，**为了解耦`Bean`的初始化和代理，是通过`AnnotationAwareAspectJAutoProxyCreator`(AbstractAutoProxyCreator的子类)这个后置处理器来在`Bean`生命周期的最后一步来完成AOP代理的**）是相悖的。
 
@@ -50,7 +51,6 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 }
 ```
 
-
 # ChatGPT解释第三级缓存存在的意义
 
 ## 为什么不能只用二级缓存？
@@ -73,7 +73,6 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 ## 如何保证循环依赖注入的是代理对象而不是原始对象
 
 **关键点**：Spring 是如何保证在循环依赖中注入的是**代理对象而不是原始对象**的，尤其是 `B` 有增强（如 `@Transactional`）的情况。
-
 ```java
 @Component
 class A {
@@ -108,17 +107,14 @@ class B {
 5. Spring 把这个代理对象 `bProxy` 放入一级缓存
 6. 回到 A 的初始化阶段，此时对 B 的注入，会从一级缓存中拿到 **增强后的代理对象 bProxy**
 
-
 ### 看源码核心逻辑：
 
 Spring 在调用 `populateBean()` 注入字段时，会通过：
-
 ```java
 DependencyDescriptor → resolveDependency → getBean("b")
 ```
 
 这个 `getBean("b")` 实际走的是：
-
 ```java
 singletonObjects.get("b") → 返回的是 B 的代理对象
 ```
@@ -130,12 +126,12 @@ singletonObjects.get("b") → 返回的是 B 的代理对象
 
 ### 关键点串联
 
-| 步骤     | 行为                           | 说明                             |
-| ------ | ---------------------------- | ------------------------------ |
-| 创建 A   | 进入 doCreateBean              | A 依赖 B，需创建 B                   |
-| 创建 B   | 进入 doCreateBean              | B 依赖 A，从 3 级缓存中拿到 A（原始对象）      |
-| 判断是否增强 | AbstractAutoProxyCreator     | B 有 @Transactional，创建代理 bProxy |
-| 注入 A.b | A 注入的是 singletonObjects["b"] | 即 bProxy，确保代理注入成功              |
+| 步骤            | 行为                           | 说明                                          |
+| ------------- | ---------------------------- | ------------------------------------------- |
+| 创建 A          | 进入 doCreateBean              | A 依赖 B，需创建 B                                |
+| 创建 B          | 进入 doCreateBean              | B 依赖 A，从 3 级缓存中拿到 A 的 ObjectFactory 创建的原始对象 |
+| 继续初始化B，判断是否增强 | AbstractAutoProxyCreator     | B 有 @Transactional，创建代理 bProxy              |
+| 注入 A.b        | A 注入的是 singletonObjects["b"] | 即 bProxy，确保代理注入成功                           |
 
 ### 小结回答
 

@@ -1,4 +1,4 @@
-#SpringBean初始化
+#SpringBean初始化 #实例化 #初始化 #注册Destruction回调 #AbstractAutowireCapableBeanFactory（Bean的初始化都在这个类中） #DisposableBeanAdapter 
 
 自动装配+Bean初始化：[33.1、SpringBoot启动流程中自动装配和Bean初始化关系](2、相关技术/15、常用框架-SSM+SpringSecurity/Hollis/Spring/33.1、SpringBoot启动流程中自动装配和Bean初始化关系.md)
 
@@ -15,7 +15,7 @@
 
 在Spring框架中，初始化和实例化是两个不同的概念：
 **实例化（Instantiation）：**
-- 实例化是**创建对象的过程**。在Spring中，这通常指的是通过调用类的构造器来创建Bean的实例。这是对象生命周期的开始阶段。对应`doCreateBean`中`的createBeanInstance`方法。
+- 实例化是**调用构造器创建对象的过程**。在Spring中，这通常指的是通过调用类的构造器来创建Bean的实例。这是对象生命周期的开始阶段。对应`AbstractAutowireCapableBeanFactory#doCreateBean`中调用的`AbstractAutowireCapableBeanFactory#createBeanInstance`方法。
 
 **初始化（Initialization）：**
 - 初始化是在**Bean实例创建后，进行一些设置或准备工作的过程**。在Spring中，包括设置Bean的属性，调用各种前置&后置处理器。对应`doCreateBean`中的`populateBean`和`initializeBean`方法。
@@ -97,7 +97,7 @@ protected Object doCreateBean(final String beanName, final RootBeanDefinition mb
 		// 实例化bean
 		// ...
 
-        // Eagerly cache singletons to be able to resolve circular references even when triggered by lifecycle interfaces like BeanFactoryAware.
+        // 主动缓存单例，以便能够解析循环引用，即使是由BeanFactoryAware等生命周期接口触发时也是如此。
 		boolean earlySingletonExposure = (mbd.isSingleton() && this.allowCircularReferences &&
 				isSingletonCurrentlyInCreation(beanName));
 		if (earlySingletonExposure) {
