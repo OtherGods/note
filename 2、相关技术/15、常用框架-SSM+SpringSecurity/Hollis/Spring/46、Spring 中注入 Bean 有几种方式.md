@@ -112,4 +112,4 @@ public class HollisService {
 
 这里用到了`@DubboReference`把HollisRemoteFacadeService这个 bean给注入进来了。`@DubboReference`其实是RPC 框架Dubbo 提供的一个注解，他的实现原理其实就是基于 `FactoryBean`来创建并配置Dubbo服务的代理对象的。
 
-具体的实现原理及过程可以参考：[8、BeanFactory和FactroyBean的关系？](2、相关技术/15、常用框架-SSM+SpringSecurity/Hollis/Spring/8、BeanFactory和FactroyBean的关系？.md)
+具体的实现原理及过程可以参考：[8、BeanFactory、FactroyBean、ObjectFactory的关系？](2、相关技术/15、常用框架-SSM+SpringSecurity/Hollis/Spring/8、BeanFactory、FactroyBean、ObjectFactory的关系？.md)

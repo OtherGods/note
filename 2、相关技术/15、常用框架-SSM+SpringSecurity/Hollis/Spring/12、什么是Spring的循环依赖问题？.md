@@ -1,3 +1,5 @@
+#A依赖B、B依赖A，在Spring启动时自动创建Bean会发现存在循环依赖 #Spring只能自动处理非构造注入且单例的循环依赖 #通过一个存储了正在创建对象的集合来判断是否发生了循环依赖 
+
 # 典型回答
 
 在Spring框架中，循环依赖是指两个或多个bean之间相互依赖，形成了一个循环引用的情况。如果不加以处理，这种情况会导致应用程序启动失败。
@@ -42,7 +44,7 @@ public class ServiceB{
 2. 创建集合状态：
 	1. `Set<String> singletonsCurrentlyInCreation`
 
-标记创建状态的集合：`Set<String> singletonsCurrentlyInCreation`；这个集合用来标记当前**正在创建中的 Bean**（应该是在Bean初始化之前就会将当前正在创建的Bean加如这个Set中【我还没debug过，这是我的猜测，不过应该没问题】）。<font color="red" size=5>一旦发现某个 Bean A 还没创建完，另一个 Bean B 又来依赖它，就说明发生了循环依赖</font>。可以通过 [三级缓存解决循环依赖问题步骤：](26、三级缓存是如何解决循环依赖的问题的？#三级缓存解决循环依赖问题步骤：) 实例来理解。
+标记创建状态的集合：`Set<String> singletonsCurrentlyInCreation`；这个集合用来标记当前**正在创建中的 Bean**（应该是在Bean初始化之前就会将当前正在创建的Bean加入这个Set中【我还没debug过，这是我的猜测，不过应该没问题】）。<font color="red" size=5>一旦发现某个 Bean A 还没创建完，另一个 Bean B 又来依赖它，就说明发生了循环依赖</font>。可以通过 [三级缓存解决循环依赖问题步骤：](26、三级缓存是如何解决循环依赖的问题的？#三级缓存解决循环依赖问题步骤：) 实例来理解。
 
 ## 为什么只支持单例
 

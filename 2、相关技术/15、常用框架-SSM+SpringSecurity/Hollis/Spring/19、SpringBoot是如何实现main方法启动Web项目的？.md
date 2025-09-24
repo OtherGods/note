@@ -1,3 +1,5 @@
+#在main方法中执行SpringBootApplication中的run方法，在run方法中刷新上下文中会创建Tomcat对象并启动Tomcat 
+
 # 典型回答
 
 在Spring Boot中，通过SpringApplication类的静态方法run来启动Web项目。当我们在main方法中调用run方法时，**Spring Boot使用一个内嵌的Tomcat服务器**，并将其配置为处理Web请求。

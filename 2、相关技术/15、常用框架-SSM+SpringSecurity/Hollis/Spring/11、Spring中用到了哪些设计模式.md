@@ -1,3 +1,5 @@
+#单例模式（Spring中的Bean默认单例） #代理模式（Spring中声明式事务、异步） #模板方法模式（Spring中编程式事务的开启、自动提交、关闭连接等） #工厂方法模式（BeanFactory、ApplicationContext、AbstractAutowireCapableFactory） #策略模式 #责任链模式（过滤器链FilterChain） #适配器模式（SpringMVC中处理器适配器） #发布订阅（Spring中发布订阅） 
+
 配合教材课件：
 1. [课件1](D:\a_学校资料\学校课程\学校_设计模式\教材资料\课件1)
 2. [课件2](D:\a_学校资料\学校课程\学校_设计模式\教材资料\课件2加密)
@@ -37,7 +39,6 @@ Spring的IOC就是一个非常好的工厂模式的例子。Spring IOC 容器就
 ```java
 protected void doDispatch(HttpServletRequest request, HttpServletResponse response) throws Exception {
     
-
     try {
         ModelAndView mv = null;
         Exception dispatchException = null;
@@ -95,7 +96,7 @@ Spring Bean也不止是单例的，还有其他作用域，如下：
 - **prototype** : 每次获取都会创建一个新的 bean 实例。也就是说，连续 getBean() 两次，得到的是不同的 Bean 实例。
 - **request** （**仅 Web 应用可用**）: 每一次 HTTP 请求都会产生一个新的 bean（请求 bean），该 bean 仅在当前 HTTP request 内有效。
 - **session** （**仅 Web 应用可用**） : 每一次来自新 session 的 HTTP 请求都会产生一个新的 bean（会话 bean），该 bean 仅在当前 HTTP session 内有效。
-- **global-session** （**仅 Web 应用可用**）：每个 Web 应用在启动时创建一个 Bean（应用 Bean），，该 bean 仅在当前应用启动时间内有效。
+- **global-session** （**仅 Web 应用可用**）：每个 Web 应用在启动时创建一个 Bean（应用 Bean），该 bean 仅在当前应用启动时间内有效。
 - **websocket** （**仅 Web 应用可用**）：每一次 WebSocket 会话产生一个新的 bean。
 ![image.png](https://raw.githubusercontent.com/OtherGods/MaterialImage/main/img/202507240953763.png)
 

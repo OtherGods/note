@@ -1,14 +1,20 @@
-#SpringBoot装配 
+#SpringBoot自动装配的作用是根据条件（ConditionXxx注解）和依赖（SpringBootStart）自动注册BeanDefinition 
+#自定义SpringBootStart（自定义配置类、在spring-factories文件中指定） 
+#SpringBoot项目启动时根据EnableAutoConfiguration注解（主要依赖Import注解）扫描类路径下spring-factories文件定义BeanDefinition（主要依赖ConfigurationClassPostProcessor类将Import中的Class数组转换为BeanDefinition） 
 
-自动装配+Bean初始化：[33.1、SpringBoot启动流程中自动装配和Bean初始化关系](2、相关技术/15、常用框架-SSM+SpringSecurity/Hollis/Spring/33.1、SpringBoot启动流程中自动装配和Bean初始化关系.md)
+主要参考：
+- [45、Spring中创建Bean有几种方式？](2、相关技术/15、常用框架-SSM+SpringSecurity/Hollis/Spring/45、Spring中创建Bean有几种方式？.md)
+- [扒一扒Bean注入到Spring的那些姿势](2、相关技术/15、常用框架-SSM+SpringSecurity/扒一扒Bean注入到Spring的那些姿势.md)
+- [2、常用注解](2、相关技术/25、源码/Spring框架/2、常用注解.md)
+- 自动装配与Bean初始化的关系：[33.1、SpringBoot启动流程中自动装配和Bean初始化关系](2、相关技术/15、常用框架-SSM+SpringSecurity/Hollis/Spring/33.1、SpringBoot启动流程中自动装配和Bean初始化关系.md)
 
 # 1、典型回答
 
 Spring Boot会根据类路径中的jar包、类，为jar包里的类自动配置，这样可以极大的减少配置的数量。简单点说就是它会根据定义在classpath下的类，自动的给你生成一些Bean，并加载到Spring的Context中。
 
-SpringBoot通过Spring 的条件配置决定哪些bean可以被配置，将这些条件定义成具体的Configuration，然后将这些Configuration配置到spring.factories文件中作为key:  `org.springframework.boot.autoconfigure.EnableAutoConfiguration` 的值。（spring.factories文件这种方式Springboot 2.7.0版本已不建议使用，最新的方式是使用 `/META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports` ）。
-
-这时候，容器在启动的时候，由于使用了 `EnableAutoConfiguration` 注解，该注解上的注解 `Import` 的`AutoConfigurationImportSelector` 会去扫描classpath下的所有 `spring.factories` 文件，然后进行bean的自动化配置：
+自动装配步骤：
+1. SpringBoot通过Spring 的条件配置决定哪些bean可以被配置，将这些条件定义成具体的Configuration，然后将这些Configuration配置到spring.factories文件中作为key:  `org.springframework.boot.autoconfigure.EnableAutoConfiguration` 的值。（spring.factories文件这种方式Springboot 2.7.0版本已不建议使用，最新的方式是使用 `/META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports` ）。
+2. 容器在启动的时候，由于使用了 `EnableAutoConfiguration` 注解，该注解上的注解 `Import` 的`AutoConfigurationImportSelector` 会去扫描classpath下的所有 `spring.factories` 文件，定义`BeanDefinition`实现bean的自动化配置
 ![1.png](https://raw.githubusercontent.com/OtherGods/MaterialImage/main/img/202405302157884.png)
 
 # 2、扩展知识
@@ -73,7 +79,7 @@ public @interface SpringBootApplication {
 
 ## 2.3、EnableAutoConfiguration
 
-其实Spring框架本身也提供了几个名字为@Enable开头的Annotation定义。比如@EnableScheduling、@EnableCaching、@EnableMBeanExport等，@EnableAutoConfiguration的理念和这些注解其实是一脉相承的。
+其实Spring框架本身也提供了几个名字为`@Enable`开头的Annotation定义。比如`@EnableScheduling`、`@EnableCaching`、`@EnableMBeanExport`等，`@EnableAutoConfiguration`的理念和这些注解其实是一脉相承的。
 
 > **@EnableScheduling** 是通过`@Import`将Spring调度框架相关的bean定义都加载到IoC容器。
 >  
@@ -119,7 +125,7 @@ org.springframework.boot.autoconfigure.cloud.CloudAutoConfiguration,\
 org.springframework.boot.autoconfigure.webservices.WebServicesAutoConfiguration
 ```
 
-上面的EnableAutoConfiguration配置了多个类，这些都是Spring Boot中的自动配置相关类；在启动过程中会解析对应类配置信息。每个Configuration都定义了相关bean的实例化配置。都说明了哪些bean可以被自动配置，什么条件下可以自动配置，并把这些bean实例化出来。
+上面的EnableAutoConfiguration配置了多个类，这些都是Spring Boot中的自启动配置相关类；在动过程中会解析对应类配置信息。每个Configuration都定义了相关bean的实例化配置。都说明了哪些bean可以被自动配置，什么条件下可以自动配置，并把这些bean实例化出来。
 
 > 如果我们新定义了一个starter的话，也要在该starter的jar包中提供 spring.factories文件，并且为其配置org.springframework.boot.autoconfigure.EnableAutoConfiguration对应的配置类。
 
@@ -150,23 +156,23 @@ public class SpringApplicationAdminJmxAutoConfiguration {
 
 看到上面的代码，终于找到了我们要找的东西——Spring 4的条件化配置。上面`SpringApplicationAdminJmxAutoConfiguration`在决定对哪些bean进行自动化配置的时候，使用了两个条件注解：`ConditionalOnProperty`和`ConditionalOnMissingBean`。只有满足这种条件的时候，对应的bean才会被创建。这样做的好处是什么？这样可以保证某些bean在没满足特定条件的情况下就可以不必初始化，避免在bean初始化过程中由于条件不足，导致应用启动失败。
 
-# ChatGPT解释自动装配作用
+# 3、解释自动装配作用
 
-Spring Boot 的 **自动配置** 是一个“根据依赖和环境条件自动注册 BeanDefinition”的机制，它的作用是 **减少手动配置、提供开箱即用的默认 Bean**，本质上是在容器启动早期阶段动态注册配置类。下面结合 Spring Boot 3.x/Spring 6 源码解释：
+SpringBoot的 **==自动配置是一个<font color="blue" size=5>根据依赖和环境条件自动注册 BeanDefinition</font>的机制==**，它的作用是 **减少手动配置、提供开箱即用的默认 Bean**，本质上是在容器启动早期阶段动态注册配置类。下面结合 Spring Boot 3.x/Spring 6 源码解释：
 
-## 自动配置的作用
+## 3.1、自动配置的作用
 
-1️⃣ **自动注册 BeanDefinition**
-- 根据类路径、环境、已有 Bean 条件，自动加载特定 `@Configuration` 配置类。
-- 例如引入 `spring-boot-starter-web`，就会自动注册 `DispatcherServlet`、`WebMvcConfigurer` 等。
-2️⃣ **提供合理的默认值**
-- 提供“约定优于配置”的默认 Bean，开发者可通过 `@Bean` 或 `@ConditionalOnMissingBean` 自定义覆盖。
-3️⃣ **解耦 Starter 与业务代码**
-- 允许第三方库通过 Starter 暴露自己的自动配置，无需修改项目代码。
+1. **自动注册 BeanDefinition**
+	- 根据类路径、环境、已有 Bean 条件，自动加载特定 `@Configuration` 配置类。
+	- 例如引入 `spring-boot-starter-web`，就会自动注册 `DispatcherServlet`、`WebMvcConfigurer` 等。
+2. **提供合理的默认值**
+	- 提供“约定优于配置”的默认 Bean，开发者可通过 `@Bean` 或 `@ConditionalOnMissingBean` 自定义覆盖。
+3. **解耦 Starter 与业务代码**
+	- 允许第三方库通过 Starter 暴露自己的自动配置，无需修改项目代码。
 
-## 源码流程：Spring Boot 自动配置是怎么跑起来的？
+## 3.2、源码流程：Spring Boot 自动配置是怎么跑起来的？
 
-### 1️⃣ 入口：`@SpringBootApplication`
+### 3.2.1、入口：`@SpringBootApplication`
 
 ```java
 @SpringBootConfiguration
@@ -184,7 +190,9 @@ public @interface EnableAutoConfiguration {}
 
 这里通过 `@Import` 把 **AutoConfigurationImportSelector** 导入到容器。
 
-### 2️⃣ `AutoConfigurationImportSelector` 选择配置类
+### 3.2.2、`AutoConfigurationImportSelector` 选择配置类
+
+过程中设计到定义`BeanDefinition`的类：[3、BeanFactoryPostProcessor](1、常用类、接口、方法……#3、BeanFactoryPostProcessor)
 
 Spring Boot 启动时会执行 `AbstractApplicationContext.refresh()` →  
 `invokeBeanFactoryPostProcessors()` → `ConfigurationClassPostProcessor`，  
@@ -200,7 +208,6 @@ public String[] selectImports(AnnotationMetadata metadata) {
 ```
 
 `getAutoConfigurationEntry()` 核心步骤：
-
 1. **加载候选自动配置类**
     ```java
     List<String> configurations = getCandidateConfigurations(annotationMetadata, attributes);
@@ -211,9 +218,9 @@ public String[] selectImports(AnnotationMetadata metadata) {
     调用 `AutoConfigurationImportFilter` 检查每个配置类上的 `@ConditionalOnClass`、`@ConditionalOnMissingBean` 等。
 3. **返回最终要导入的配置类**
 
-### 3️⃣ 注册 BeanDefinition
+### 3.2.3、注册 BeanDefinition
 
-返回的类会被当作 `@Configuration` 处理，Spring 通过 `ConfigurationClassPostProcessor` 将其中的 `@Bean` 方法解析成 `BeanDefinition` 并注册到 `BeanFactory`。
+`AutoConfigurationImportSelector#selectImports()`方法返回的类会被当作 `@Configuration` 处理，Spring 通过 `ConfigurationClassPostProcessor` 将其中的 `@Bean` 方法解析成 `BeanDefinition` 并注册到 `BeanFactory`。
 
 **示例：DataSource 自动配置**
 ```java
@@ -233,26 +240,26 @@ public class DataSourceAutoConfiguration {
 - 如果容器中没有 `DataSource` Bean
 - → 注册 `HikariDataSource` BeanDefinition
 
-### 4️⃣ 真正的 Bean 创建
+### 3.2.4、真正的 Bean 创建
 
 当容器进入 `finishBeanFactoryInitialization()`，`AbstractAutowireCapableBeanFactory` 会根据 BeanDefinition 调用 `createBean()` 完成实例化和依赖注入。
 
 > 这说明：**自动配置只负责提前“准备” BeanDefinition，实际 Bean 的生命周期依然由 Spring Framework 执行。**
 
-## 自动配置的作用总结（结合源码）
+## 3.3、自动配置的作用总结（结合源码）
 
-✅ **阶段**：
-- 发生在 `invokeBeanFactoryPostProcessors()`，Bean 实例化之前。
-✅ **职责**：
-- 动态收集 Starter 中的配置类。
-- 判断环境是否满足条件（`@ConditionalOnClass`、`@ConditionalOnProperty`）。
-- 注册默认的 BeanDefinition。
-✅ **价值**：
-- 避免重复配置，提供即插即用的模块化组件。
-- 让 Spring Boot Starter 能以“零配置”方式集成。
+1. **阶段**：
+	- **==发生在 `invokeBeanFactoryPostProcessors()`，Bean 实例化之前==**。
+2. **职责**：
+	- **==动态收集 Starter 中的配置类==**。
+	- 判断环境是否满足条件（`@ConditionalOnClass`、`@ConditionalOnProperty`）。
+	- **==注册默认的 BeanDefinition==**。
+3. **价值**：
+	- 避免重复配置，提供即插即用的模块化组件。
+	- 让 Spring Boot Starter 能以“零配置”方式集成。
 
-## 一句话总结
+## 3.4、一句话总结
 
-- **Spring Boot 自动配置 = 在容器刷新早期阶段，通过 `AutoConfigurationImportSelector` + 条件注解，把 Starter 的配置类动态注册到 BeanFactory 中。**
+- **Spring Boot 自动配置 = 在容器刷新早期阶段，通过 `AutoConfigurationImportSelector` + 条件注解，把 Starter 的配置类对应的`BeanDefinition`动态注册到 BeanFactory 中。**
 - **AbstractAutowireCapableBeanFactory = 真正执行 Bean 实例化和依赖注入的底层工厂。**
 - 两者的关系：自动配置负责“告诉容器要创建哪些 Bean”，BeanFactory负责“如何创建这些 Bean”。

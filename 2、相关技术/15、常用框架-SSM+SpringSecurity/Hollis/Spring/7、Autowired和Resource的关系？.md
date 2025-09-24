@@ -1,3 +1,5 @@
+#都用来做依赖注入 #Autowired由Spring支持，Resource由Java支持 #Autowired先按类型注入再按名称注入，Resource先按名称注入后按类型注入 #Autowired作用域构造器、setter、字段，Resource作用域setter、字段 #Autowired可以不注入，Resource必须自动注入  
+
 # 典型回答
 
 ## 相同点

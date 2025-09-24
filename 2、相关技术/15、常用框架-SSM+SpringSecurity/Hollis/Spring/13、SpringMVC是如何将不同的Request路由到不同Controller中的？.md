@@ -1,3 +1,6 @@
+#SpringMVC在启动时会将带有RequestMapping及其衍生注解的类和方法封装成HandlerMethod注册到HandlerMapping中 
+#SpringMVC处理请求时先根据请求中的url、method、header中的信息从HandlerMapping中获取到HandlerAdapter（处理器适配器）以及对应的拦截器，通过处理器适配器去调用处理器HandlerMethod，在处理器执行前后调用拦截器的preHandler、postHandler处理，在将处理器的返回渲染到视图后再调用拦截器的afterCompletion处理最后返回给用户  
+
 # 典型回答
 
 在计算机程序处理中，但凡涉及到路由，那包含到的数据结构一定是和map相关的。所以对于url和controller之间的映射，如果交给我们来设计的话，可能会用一个大的map将url和controller中对应的方法作为键值对存储起来，以此来达到路由的目的。
@@ -50,7 +53,7 @@ protected HandlerMethod lookupHandlerMethod(String lookupPath, HttpServletReques
 1. 先通过`HandlerMapping`拿到request对应的`HandlerExecutionChain`，然后再拿到`HandlerExecutionChain`中`handler`对应的`HandlerAdapter`，执行`HandlerExecutionChain`中`interceptor#prehandle`方法。（责任链模式）
 2. 再通过`HandlerAdapter`去执行`handler`，`handler`其实对应的是之前注册的`HandlerMethod`（`handlerMethod`里面封装的映射的真正方法 `handler` 还有可能是原生的`Servlet`），所以要执行`handler.invoke`，不过在这之前要去判断参数，这一步需要参数解析器`HandlerMethodArgumentResolver`。**通过反射调用前端请求的后端方法**，反射调用完之后，需要调用返回值解析器`HandlerMethodReturnValueHanlder`（适配器模式&组合模式&策略模式）
 3. 真正方法执行完了之后，再执行`HandlerExecutionChain`中`interceptor#posthandle`方法进行拦截器的后置处理。
-4. SpringMVC执行完之后返回的是`ModelAndView`，我们还需要对`ModelAndView`进行render，即把ModelAndView中的view渲染到response中
+4. SpringMVC执行完之后返回的是`ModelAndView`，我们还需要对`ModelAndView`进行render，即把ModelAndView中的view渲染到response中，视图渲染后再执行`HandlerExecutionChain`中`interceptor#afterCompletion`方法进行适当的资源清理
 5. 当发生异常时，会将异常拉到用户业务自己的异常处理方法中，这时也需要对参数和返回值进行custom，此时就需要用到`HandlerExceptionResolver`系列了。因为用户标记的`@ExceptionHandler`方法已经被`ExceptionHandlerMethodResolver`找到并且注册（key为对应异常，value为对应方法），只需要调用该方法就可以对异常进行处理，此时的方法调用和之前的handler几乎没有区别
 
 SpringMVC的执行流程图如下：

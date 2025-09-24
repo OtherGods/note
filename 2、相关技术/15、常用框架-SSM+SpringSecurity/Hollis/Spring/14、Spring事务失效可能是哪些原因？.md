@@ -1,3 +1,6 @@
+#Spring中声明式事务依赖动态代理，动态代理失效的原因有：私有方法、静态方法、final方法、类中方法调用、内部类方法的调用等
+#Transactional注解用的不是Spring中的 #Transactional注解的异常处理、传播机制用的不对 #事务中的异常被捕获、异常在子线程中 
+
 # 典型回答
 
 Spring中比较容易失效的就是通过 `@Transactional` 定义的声明式事务，他在以下几个场景中会导致事务失效，首先，就是Spring的@Transactional是基于Spring的AOP机制实现的，而AOP机制又是基于动态代理实现的。那么如果代理失效了，事务也就会失效。
@@ -93,6 +96,8 @@ public class SomeService {
 [6、Spring的事务传播机制有哪些？](2、相关技术/15、常用框架-SSM+SpringSecurity/Hollis/Spring/6、Spring的事务传播机制有哪些？.md)
 
 **2、@Transactional 注解属性 rollbackFor 设置错误**
+
+默认情况下，事务将在Ru`ntimeException`和`Error`上回滚，但不会在已检查的异常（业务异常）上回滚。
 
 [32、Java中异常分哪两类，有什么区别？](2、相关技术/1、Java基础/Hollis/32、Java中异常分哪两类，有什么区别？.md)
 ```java

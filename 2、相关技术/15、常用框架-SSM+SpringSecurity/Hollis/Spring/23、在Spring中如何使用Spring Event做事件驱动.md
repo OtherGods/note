@@ -61,13 +61,13 @@ public class RegisterService{
 
 在我们的RegisterService中，我们在用户注册成功之后，调用applicationContext.publishEvent即可把我们的注册成功事件广播出去了。
 
-但是需要注意的是，默认情况下，<font color="red" size=5>Spring Event的调用是同步调用的</font>。如果想要实现异步调用，也是支持的，最简单的方式就是借助@Async 注解：
+但是需要注意的是，默认情况下，<font color="red" size=5>Spring Event的调用是同步调用的</font>。如果想要实现异步调用，也是支持的，最简单的方式就是借助 `@Async` 注解：
 
-修改监听器，增加@Async 注解：
+修改监听器，增加 `@Async` 注解：
 ```java
 /**
  * 案件中心内部事件监听器
- *
+ * 
  * @author Hollis
  */
 @Component

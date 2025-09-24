@@ -1,3 +1,5 @@
+#BeanFactory是SpringIOC的一部分 #BeanFactory负责对象的关键与对象生命周期的管理 #AbstractAutowireCapableBeanFactory、ApplicationContext是BeanFactory的实现 #FactroyBean是对象工厂，复杂对象的创建可以交给它，可以用来创建代理对象 #Dubbo中ReferenceBean是FactoryBean的实现 
+
 # 典型回答
 
 `FactoryBean` 和 `BeanFactory` 是Spring中的两个重要的概念。先看一下他们的类定义：
@@ -47,7 +49,7 @@ Object getBean(String name) throws BeansException;
 
 ## BeanFactory
 
-BeanFactory比较常用，名字也比较容易理解，就是<font color="red" size=5>Bean工厂</font>，他是整个**Spring IoC容器的一部分，负责管理Bean的创建和生命周期**。
+BeanFactory比较常用，名字也比较容易理解，就是<font color="red" size=5>Bean工厂</font>，他是整个 **==Spring IoC容器的一部分==，负责==管理Bean的创建和生命周期==**。
 
 其中提供了一系列方法，可以让我们获取到具体的Bean实例。你可能没有直接用过BeanFactory，但是你肯定用过或者见过：
 ```java
@@ -89,6 +91,21 @@ ReferenceBean 实现了 FactoryBean 接口并实现了getObject方法。**在get
 通过实现 FactoryBean，ReferenceBean 能够很好地与Spring框架集成。这意味着它可以利用Spring的依赖注入，生命周期管理等特性，并且能够被Spring容器所管理。
 
 所以，**FactoryBean通常用于创建很复杂的对象**，比如需要通过某种特定的创建过程才能得到的对象。例如，创建与JNDI资源的连接或与代理对象的创建。就如我们的Dubbo中的ReferenceBean。
+
+### ObjectFactory
+
+`ObjectFactory` 是一个简单的函数式接口，主要用于**延迟获取Bean实例**。
+- **延迟加载**：只有在调用 `getObject()` 时才真正获取Bean实例
+- **轻量级**：本身不参与Bean的生命周期管理
+- **解决循环依赖**：Spring内部用它来解决构造函数循环依赖
+
+|       | ObjectFactory    | FactoryBean   |
+| ----- | ---------------- | ------------- |
+| 本质    | 对象提供者（Provider）  | 对象工厂（Factory） |
+| 复杂度   | 简单，单一方法          | 复杂，完整生命周期     |
+| 使用时机  | 运行时延迟获取          | 容器启动时创建       |
+| 适用场景  | 循环依赖、延迟加载、原型Bean | 复杂对象创建、第三方集成  |
+| 与容器关系 | 客户端的工具类          | 容器的基础设施       |
 
 # 扩展知识
 

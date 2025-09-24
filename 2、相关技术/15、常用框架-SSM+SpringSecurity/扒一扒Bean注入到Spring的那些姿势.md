@@ -133,6 +133,8 @@ public MybatisPlusInterceptor mybatisPlusInterceptor() {
 
 #### @Import
 
+参考：[6、@Import注解](2、常用注解#6、@Import注解)
+
 @Import注解也可以用来将Bean注入到Spring容器中，@Import注解导入的类可以分为三种情况：
 - 普通类
 - 类实现了ImportSelector接口

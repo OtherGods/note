@@ -1,3 +1,5 @@
+#PostConstruct #Bean注解中initMethod指定的方法 #afterPropertiesSet方法
+
 # 典型回答
 
 在Spring框架中，使用@PostConstruct、自定义的init-method方法，和InitializingBean接口和afterPropertiesSet方法都是用于在Bean初始化阶段执行特定方法的方式。他们的执行顺序是：**构造函数 > @PostConstruct > afterPropertiesSet > init-method**
@@ -76,7 +78,6 @@ init-method执行
 ```
 
 所以，他们的执行顺序就是：构造函数 > @PostConstruct > afterPropertiesSet > init-method
-
 
 # 扩展知识
 

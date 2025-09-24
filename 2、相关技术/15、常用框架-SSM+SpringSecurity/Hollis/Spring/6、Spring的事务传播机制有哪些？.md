@@ -1,3 +1,5 @@
+
+
 # 典型回答
 
 Spring的事务传播机制用于控制在多个事务方法相互调用时事务的行为。
@@ -14,7 +16,6 @@ Spring的事务规定了7种事务的传播级别，默认的传播机制是**RE
 - **NESTED**，如果之前有事务，则创建嵌套事务，<font color="red" size=5>嵌套事务回滚<font color="blue" size=5>不影响父事务</font>，反之父事务<font color="blue" size=5>影响嵌套事务</font></font>
 
 REQUIRED、REQUIRES_NEW、NESTED的对比：[1.5.2.4 REQUIRED,REQUIRES_NEW,NESTED](Spring事务小结#1.5.2.4%20REQUIRED,REQUIRES_NEW,NESTED)
-
 
 # 扩展知识
 

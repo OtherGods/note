@@ -1,8 +1,21 @@
-#SpringBean初始化 #实例化 #初始化 #注册Destruction回调 #AbstractAutowireCapableBeanFactory（Bean的初始化都在这个类中） #DisposableBeanAdapter 
+#SpringBean初始化 #实例化（调用工厂方法或构造方法创建空对象） #向三级缓存冲添加封装了空对象的ObjectFactory与beanName的映射 #bean初始化 #Autowired/Resource等注解的属性注入 #xxxAware中xxxSet方法 #PostConstruct注解 #afterPropertiesSet方法 #init-method指定的方法 #注册Destruction回调 #AbstractAutowireCapableBeanFactory（Bean的实例化初始化都在这个类中） #DisposableBeanAdapter 
 
 自动装配+Bean初始化：[33.1、SpringBoot启动流程中自动装配和Bean初始化关系](2、相关技术/15、常用框架-SSM+SpringSecurity/Hollis/Spring/33.1、SpringBoot启动流程中自动装配和Bean初始化关系.md)
 
 # 典型回答
+
+**==简化流程==**
+- 实例化：
+   1. 工厂/构造函数创建空对象
+   2. 将空对象封装成ObjectFactory，将beanName与ObjectFactory的映射存入三级缓存中
+- 初始化：
+   1. `@Autowired/@Resource`等属性注入
+   2. `xxxAware#setXxx`方法
+   3. `@PostConstruct`*==(在BeanPostProcessor#postProcessBeforeInitialization方法中)==*
+   4. `afterPropertiesSet`方法
+   5. init-method指定的方法
+   6. 代理对象的创建 *==(在BeanPostProcessor#postProcessAfterInitialization方法中)==*
+
 
 [31、Spring Bean的生命周期是怎么样的？](2、相关技术/15、常用框架-SSM+SpringSecurity/Hollis/Spring/31、Spring%20Bean的生命周期是怎么样的？.md)
 
@@ -77,7 +90,7 @@ protected BeanWrapper createBeanInstance(String beanName, RootBeanDefinition mbd
 }
 ```
 
-其实就是先确保这个Bean对应的类已经被加载，然后确保它是public的，然后如果有工厂方法，则直接调用工厂方法创建这个Bean，如果没有的话就调用它的构造方法来创建这个Bean。
+其实就是先确保这个Bean对应的类已经被加载，然后确保它是public的，然后<font color="blue" size=5>如果有工厂方法，则直接调用工厂方法创建这个Bean，如果没有的话就调用它的构造方法来创建这个Bean</font>。
 
 这里需要注意的是，在Spring的完整Bean创建和初始化流程中，**容器会在调用createBeanInstance之前检查Bean定义的作用域。如果是Singleton，容器会在其内部单例缓存中查找现有实例**。如果实例已存在，它将被重用；如果不存在，才会调用 `createBeanInstance` 来创建新的实例。
 ```java
@@ -90,7 +103,7 @@ if (instanceWrapper == null) {
 }
 ```
 
-下一步就应该要到设置属性值了，但是在这之前还有一个重要的东西要讲，那就是三级解决循环依赖，在`AbstractAutowireCapableBeanFactory#doCreateBean`方法中
+下一步就应该要到设置属性值了，但是在这之前还有一个重要的东西要讲，那就是三级解决循环依赖，在`AbstractAutowireCapableBeanFactory#doCreateBean`方法中会<font color="blue" size=5>将实例化得到的空对象包装成ObjectFactory与对应beanName添加入三级缓存中</font>
 ```java
 protected Object doCreateBean(final String beanName, final RootBeanDefinition mbd, final Object[] args) throws BeanCreationException {
 
@@ -131,6 +144,7 @@ protected Object doCreateBean(final String beanName, final RootBeanDefinition mb
 [27、Spring解决循环依赖一定需要三级缓存吗？](2、相关技术/15、常用框架-SSM+SpringSecurity/Hollis/Spring/27、Spring解决循环依赖一定需要三级缓存吗？.md)
 
 ## 2、初始化
+
 ### 2.1、设置属性值
 
 给Bean注入属性（包括Bean中被注解 `@Autowired`、`@Value` 等注释的属性）

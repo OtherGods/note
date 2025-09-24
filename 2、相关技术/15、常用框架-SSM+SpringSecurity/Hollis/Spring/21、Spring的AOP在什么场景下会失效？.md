@@ -1,3 +1,5 @@
+#SpringAOP基于动态代理 #私有方法调用 #静态方法调用 #final方法调用 #类内部自调用 #内部类方法调用
+
 # 1、典型回答
 
 [2、介绍一下Spring的AOP](2、相关技术/15、常用框架-SSM+SpringSecurity/Hollis/Spring/2、介绍一下Spring的AOP.md)
@@ -71,12 +73,3 @@ public class MyService {
 3. final方法调用
 4. 类内部自调用
 5. 内部类方法调用
-
-
-
-
-
-
-
-
-

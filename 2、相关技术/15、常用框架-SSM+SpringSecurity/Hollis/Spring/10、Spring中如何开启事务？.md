@@ -1,3 +1,5 @@
+#通过注解Transaction或手动注入TransactionTemplate、TransactionDefinition等开启事务 #注解方式开启事务依赖于动态代理 #动态代理失效的情况  
+
 # 典型回答
 
 事务管理在系统开发中是不可缺少的一部分，Spring提供了很好事务管理机制，主要分为编程式事务和声明式事务两种。

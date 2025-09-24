@@ -1,6 +1,11 @@
+#SpringBoot可以同来简化Spring项目的开发、部署、配置等 
+#自动装配（例如：SpringBootStarter，我们平常开发时只需要引入Starter即可以自动注册Starter中的类为BeanDefinition） 
+#内嵌Tomcat（无需外部服务器） 
+#约定大于配置（比如自动装配中Import注解中value值为是实现了xxxImportSelector接口的类，这些类中的selectImports方法默认读取spring-factories文件） 
+
 # 典型回答
 
-Spring是一个非常强大的企业级Java开发框架（Java的腾飞他居功至伟），提供了一系列模块来支持不同的应用需求，如依赖注入、面向切面编程、事务管理、Web应用程序开发等。而**SpringBoot的出现，主要是起到了*简化Spring应用程序的开发和部署*，特别是用于构建微服务和快速开发的应用程序。**
+Spring是一个非常强大的企业级Java开发框架（Java的腾飞他居功至伟），提供了一系列模块来支持不同的应用需求，如依赖注入、面向切面编程、事务管理、Web应用程序开发等。而**SpringBoot的出现，主要是起到了==简化Spring应用程序的<font color="blue" size=5>开发和部署</font>==，特别是用于构建微服务和快速开发的应用程序。**
 
 相比于Spring，SpringBoot主要在这几个方面来提升了我们使用Spring的效率，降低开发成本：
 1. **自动配置**：Spring Boot通过`Auto-Configuration`来<font color="red" size=5>减少开发人员的配置工作</font>。我们可以**通过依赖一个starter就把一坨东西全部都依赖进来，使开发人员可以更专注于业务逻辑而不是配置**。

@@ -1,5 +1,10 @@
-对照：
+#dubbo的优雅停机基于事件和ShutDownHook 
+
+优雅停机参考：
+- [4、什么是Dubbo的优雅停机，怎么实现的？](2、相关技术/22、微服务/RPC/1、Dubbo/Hollis/4、什么是Dubbo的优雅停机，怎么实现的？.md)
 - [4、对JDK进程执行kill -9有什么影响？](2、相关技术/3、JVM/Hollis/4、对JDK进程执行kill%20-9有什么影响？.md)
+- [28、SpringBoot如何做优雅停机？](2、相关技术/15、常用框架-SSM+SpringSecurity/Hollis/Spring/28、SpringBoot如何做优雅停机？.md)
+- [20、Spring中shutdownhook作用是什么？](2、相关技术/15、常用框架-SSM+SpringSecurity/Hollis/Spring/20、Spring中shutdownhook作用是什么？.md)
 - [57、什么情况会导致JVM退出？](2、相关技术/3、JVM/Hollis/57、什么情况会导致JVM退出？.md)
 
 # 典型回答

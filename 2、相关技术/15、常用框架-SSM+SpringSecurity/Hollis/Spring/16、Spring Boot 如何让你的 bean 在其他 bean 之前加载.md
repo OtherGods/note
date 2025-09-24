@@ -1,3 +1,5 @@
+#直接依赖 #DependsOn注解 #BeanFactoryPostProcessor 
+
 # 典型回答
 
 面对这个问题的时候，读者朋友们可能会有点懵逼，但是我们回到Bean初始化的本质上来看，Bean初始化有两个时机：
@@ -42,10 +44,14 @@ public class BeanOrderConfiguration {
 
 ## BeanFactoryPostProcessor
 
+参考：
+- 介绍：[3、BeanFactoryPostProcessor](1、常用类、接口、方法……#3、BeanFactoryPostProcessor)
+- 自动装配：[3.2.2、`AutoConfigurationImportSelector` 选择配置类](18、Springboot是如何实现自动配置的？#3.2.2、`AutoConfigurationImportSelector`%20选择配置类)
+
 前两种方式只能对于特定的Bean生效，如果我们希望某个Bean在其他所有Bean加载之前就初始化，用前面两种方式显然是不合适的，我们这个时候，就需要从Spring容器的生命周期中去找方法。
 [4、Spring Bean的初始化过程是怎么样的？](2、相关技术/15、常用框架-SSM+SpringSecurity/Hollis/Spring/4、Spring%20Bean的初始化过程是怎么样的？.md)
 
-通过上面的参考文章我们可以知道，Spring的Bean在初始化之前，会通过BeanFactoryPostProcessor#postProcessBeanFactory对工厂进行处理，我们可以依赖这个特性，在此刻提前初始化我们需要的bean
+Spring的Bean在实例化之前，会通过`BeanFactoryPostProcessor#postProcessBeanFactory`进行自动装配，我们可以依赖这个特性，在此刻提前初始化我们需要的bean
 ```java
 @Component
 public class PrimaryBeanProcessor implements BeanFactoryPostProcessor {

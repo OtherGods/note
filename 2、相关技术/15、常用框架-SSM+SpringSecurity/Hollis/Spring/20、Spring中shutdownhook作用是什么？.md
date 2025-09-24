@@ -1,3 +1,13 @@
+#ShutDownHook用于在应用程序关闭时执行一些清理操作 #SpringBoot在启动的时候会向JVM注册一个ShutDownHook用于在接收到某些信号时去销毁bean、容器等 
+#bean的销毁是依赖于bean创建时调用AbstractAutowireCapableBeanFactory中registerDisposableBeanIfNecessary方法保存一个Map，销毁时去这个Map中查询并处理
+
+优雅停机参考：
+- [4、什么是Dubbo的优雅停机，怎么实现的？](2、相关技术/22、微服务/RPC/1、Dubbo/Hollis/4、什么是Dubbo的优雅停机，怎么实现的？.md)
+- [4、对JDK进程执行kill -9有什么影响？](2、相关技术/3、JVM/Hollis/4、对JDK进程执行kill%20-9有什么影响？.md)
+- [28、SpringBoot如何做优雅停机？](2、相关技术/15、常用框架-SSM+SpringSecurity/Hollis/Spring/28、SpringBoot如何做优雅停机？.md)
+- [20、Spring中shutdownhook作用是什么？](2、相关技术/15、常用框架-SSM+SpringSecurity/Hollis/Spring/20、Spring中shutdownhook作用是什么？.md)
+- [57、什么情况会导致JVM退出？](2、相关技术/3、JVM/Hollis/57、什么情况会导致JVM退出？.md)
+
 # 典型回答
 
 ## 执行流程
@@ -11,7 +21,7 @@ Spring会向JVM注册一个shutdown hook，在接收到关闭通知的时候，�
 > SpringBoot 2.4.0 中钩子函数注册和回调过程：
 > 1. 注册：SpringBoot容器启动时候
 >    - 被 `@SpringBootApplication` 注解标注的类的main方法 **——>** `SpringApplication#public ConfigurableApplicationContext run(String... args)` **——>** `SpringApplication#refreshContext` **——>** `AbstractApplicationContext#registerShutdownHook`
-> 2. 回调：kill、system.exit(0)、Runtime.halt、代码抛RuntimeException异常等触发注册时指定的回调方法
+> 2. 回调：kill、system.exit(0)、~~Runtime.halt~~、代码抛RuntimeException异常等触发注册时指定的回调方法，在钩子方法中发布时间
 >    - `AbstractApplicationContext#doClose` **——>** 发布事件 `ContextClosedEvent`、执行注解 `@PreDestroy` 标注的方法、执行实现了 `DisposableBean` 接口的类中的方法
 
 很多中间件的优雅上下线的功能（优雅停机），都是基于Spring的shutdown hook的机制实现的，比如Dubbo的优雅下线。
@@ -21,7 +31,7 @@ Spring会向JVM注册一个shutdown hook，在接收到关闭通知的时候，�
 
 还有我们经常在Spring中使用的以下两种方式，其实都是基于shutdown hook实现的。如：
 
-1. **实现DisposableBean接口，实现destroy方法：**
+1. **实现DisposableBean接口，实现destroy方法：** *==在Bean创建时会调用AbstractAutowireCapableBeanFactory#registerDisposableBeanIfNecessary方法，在该方法内部判断这个bean是不是实现了DisposableBean接口，==*
 ```java
 @Slf4j
 @Component
