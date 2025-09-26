@@ -102,6 +102,8 @@ for (TreeNode<K,V> e = b, next; e != null; e = next) {
 <font color="red">取消树化非常简单，因为之前已经是条链表了(HashMap中TreeNode节点集成自链表的Node节点)，所以只需要将里面的元素由TreeNode转为Node即可</font>
 > 至于重新树化的过程，请听下回分解～
 
+![image.png](https://raw.githubusercontent.com/OtherGods/MaterialImage/main/img/202509261256792.png)
+
 ![image.png](https://raw.githubusercontent.com/OtherGods/MaterialImage/main/img/202507091111368.png)
 ![image.png](https://raw.githubusercontent.com/OtherGods/MaterialImage/main/img/202507091111026.png)
 ![image.png](https://raw.githubusercontent.com/OtherGods/MaterialImage/main/img/202507091112784.png)

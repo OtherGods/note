@@ -25,7 +25,7 @@
 5. `SynchronousQueue`： 一个**不存储元素的阻塞队列**（常用）
 6. `LinkedTransferQueue`： 一个由链表结构组成的**无界阻塞队列**
 7. `LinkedBlockingDeque`： 一个由链表结构组成的**双向阻塞队列**
-
+![](https://raw.githubusercontent.com/OtherGods/MaterialImage/main/img/202509241643983.png)
 
 ## 1.5、线程池4种拒绝策略
 

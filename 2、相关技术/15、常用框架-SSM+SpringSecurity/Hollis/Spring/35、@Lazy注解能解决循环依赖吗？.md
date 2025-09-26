@@ -1,3 +1,5 @@
+#使用Lazy注解后，在SprinngBoot启动过程中会不会创建实际的bean，Lazy可以通过ObjectyFactory让某个bean的创建延迟到使用时 #和半成品提前曝光、三级缓存没有关系
+
 # 典型回答
 
 答案是：能，但是要看情况，他可以<font color="red" size=5>用来解决<font color="blue" size=5>构造器注入</font>这种方式下的循环依赖</font>。

@@ -1,3 +1,5 @@
+#内部基于ScheduledExecutorService线程池来实现 
+
 # 典型回答
 
 Spring 的 `@Scheduled` 注解用于在 Spring 应用中配置和执行定时任务。
@@ -131,7 +133,7 @@ public ConcurrentTaskScheduler(@Nullable ScheduledExecutorService scheduledExecu
 
 ## @Scheduled用法
 
-1. 定义一线程池
+1. 定义一个线程池
 ```java
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

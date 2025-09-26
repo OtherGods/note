@@ -16,12 +16,12 @@
 
 Spring会向JVM注册一个shutdown hook，在接收到关闭通知的时候，进行bean的销毁，容器的销毁处理等操作。
 
-在Spring框架中，可以使用使用`AbstractApplicationContext`类或其子类来注册Shutdown Hook。这些类提供了一个`registerShutdownHook()`方法，用于将Shutdown Hook与应用程序上下文关联起来。【这是基于低版本SpringBoot，比如2.4.0】
+在Spring框架中，可以使用使用`AbstractApplicationContext`类或其子类来注册Shutdown Hook。这些类提供了一个`registerShutdownHook()`方法，用于将Shutdown Hook与应用程序上下文关联起来。【这是基于低版本SpringBoot，比如2.4.0，高版本不再调用`registerShutdownHook()`注册，在3.2.2中通过`registerApplicationContext#registerApplicationContext`实现】
 
 > SpringBoot 2.4.0 中钩子函数注册和回调过程：
 > 1. 注册：SpringBoot容器启动时候
->    - 被 `@SpringBootApplication` 注解标注的类的main方法 **——>** `SpringApplication#public ConfigurableApplicationContext run(String... args)` **——>** `SpringApplication#refreshContext` **——>** `AbstractApplicationContext#registerShutdownHook`
-> 2. 回调：kill、system.exit(0)、~~Runtime.halt~~、代码抛RuntimeException异常等触发注册时指定的回调方法，在钩子方法中发布时间
+>    - 被 `@SpringBootApplication` 注解标注的类的main方法 **——>** `SpringApplication#public ConfigurableApplicationContext run(String... args)` **——>** `SpringApplication#refreshContext` **——>** `AbstractApplicationContext#registerShutdownHook()`
+> 2. 回调：kill、system.exit(0)、~~Runtime.halt~~、代码抛RuntimeException异常等触发注册时指定的回调方法，在`AbstractApplicationContext#doClose()`方法中遍历`DefaultSingletonBeanRegistry#disposableBeans`，这个Map中的内容是在bean创建的第三步（实例化、初始化、注册销毁回调）注册销毁回调中添加的：[31、Spring Bean的生命周期是怎么样的？](2、相关技术/15、常用框架-SSM+SpringSecurity/Hollis/Spring/31、Spring%20Bean的生命周期是怎么样的？.md)
 >    - `AbstractApplicationContext#doClose` **——>** 发布事件 `ContextClosedEvent`、执行注解 `@PreDestroy` 标注的方法、执行实现了 `DisposableBean` 接口的类中的方法
 
 很多中间件的优雅上下线的功能（优雅停机），都是基于Spring的shutdown hook的机制实现的，比如Dubbo的优雅下线。

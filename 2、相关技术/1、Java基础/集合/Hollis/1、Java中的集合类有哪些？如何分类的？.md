@@ -3,7 +3,12 @@
 Java的整个集合框架中，主要分为List，Set，Queue，Stack，Map等五种数据结构。其中，前四种数据结构都是单一元素的集合，而最后的Map则是以KV对的形式使用。
 
 从继承关系上讲，List，Set，Queue都是Collection的子接口，Collection又继承了Iterable接口，说明这几种集合都是可以遍历的。
+
 ![image.png](https://raw.githubusercontent.com/OtherGods/MaterialImage/main/img/202507072336683.png)
+
+![](https://raw.githubusercontent.com/OtherGods/MaterialImage/main/img/202509072245793.png)
+
+![](https://raw.githubusercontent.com/OtherGods/MaterialImage/main/img/202509072141430.png)
 
 从功能上讲，List代表一个容器，可以是先进先出，也可以是先进后出。而Set相对于List来说，是无序的，同时也是一个去重的列表，既然会去重，就一定会通过equals，compareTo，hashCode等方法进行比较。Map则是KV的映射，也会涉及到Key值的查询等能力。
 

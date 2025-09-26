@@ -92,9 +92,9 @@ ReferenceBean 实现了 FactoryBean 接口并实现了getObject方法。**在get
 
 所以，**FactoryBean通常用于创建很复杂的对象**，比如需要通过某种特定的创建过程才能得到的对象。例如，创建与JNDI资源的连接或与代理对象的创建。就如我们的Dubbo中的ReferenceBean。
 
-### ObjectFactory
+## ObjectFactory
 
-`ObjectFactory` 是一个简单的函数式接口，主要用于**延迟获取Bean实例**。
+`ObjectFactory` 是一个简单的 **==函数式接口==**，主要用于**延迟获取Bean实例**。
 - **延迟加载**：只有在调用 `getObject()` 时才真正获取Bean实例
 - **轻量级**：本身不参与Bean的生命周期管理
 - **解决循环依赖**：Spring内部用它来解决构造函数循环依赖
@@ -103,7 +103,7 @@ ReferenceBean 实现了 FactoryBean 接口并实现了getObject方法。**在get
 | ----- | ---------------- | ------------- |
 | 本质    | 对象提供者（Provider）  | 对象工厂（Factory） |
 | 复杂度   | 简单，单一方法          | 复杂，完整生命周期     |
-| 使用时机  | 运行时延迟获取          | 容器启动时创建       |
+| 使用时机  | **运行时获取、延迟获取**   | 容器启动时创建       |
 | 适用场景  | 循环依赖、延迟加载、原型Bean | 复杂对象创建、第三方集成  |
 | 与容器关系 | 客户端的工具类          | 容器的基础设施       |
 

@@ -1,4 +1,4 @@
-#PostConstruct #Bean注解中initMethod指定的方法 #afterPropertiesSet方法
+#PostConstruct #afterPropertiesSet方法 #Bean注解中initMethod指定的方法 
 
 # 典型回答
 

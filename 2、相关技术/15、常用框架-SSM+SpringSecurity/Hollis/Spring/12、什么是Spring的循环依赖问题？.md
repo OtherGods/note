@@ -1,4 +1,7 @@
-#A依赖B、B依赖A，在Spring启动时自动创建Bean会发现存在循环依赖 #Spring只能自动处理非构造注入且单例的循环依赖 #通过一个存储了正在创建对象的集合来判断是否发生了循环依赖 
+#A依赖B、B依赖A
+#Spring只能自动处理非构造注入且单例的循环依赖 
+#通过一个存储了正在创建对象的集合来判断是否发生了循环依赖 
+#一句话描述发现循环依赖过程：从一级缓存找不到A对象且当前正在创建对象的集合没有A对象的名字，则实例化A对象并将A写入当前正在创建对象的集合中，初始化A对象，初始化A对象时会向A对象注入B对象，从一级缓存中获取不到B对象且当前正在创建对象的集合没有B对象的名字，则实例化B对象并将B写入当前正在创建对象的集合中，初始化B对象，初始化B对象时会向B对象注入A对象，从一级缓存中获取不到A对象且当前正在创建对象的集合有A对象的名字，发现了循环依赖 
 
 # 典型回答
 
@@ -41,7 +44,7 @@ public class ServiceB{
 	1. 一级缓存：`Map<String, Object> singletonObjects`
 	2. 二级缓存：`Map<String, Object> earlySingletonObjects`
 	3. 三级缓存：`Map<String, ObjectFactory<?>> singletonFactories`
-2. 创建集合状态：
+2. 创建集合状态：是整个IOC容器共享的，是线程安全的
 	1. `Set<String> singletonsCurrentlyInCreation`
 
 标记创建状态的集合：`Set<String> singletonsCurrentlyInCreation`；这个集合用来标记当前**正在创建中的 Bean**（应该是在Bean初始化之前就会将当前正在创建的Bean加入这个Set中【我还没debug过，这是我的猜测，不过应该没问题】）。<font color="red" size=5>一旦发现某个 Bean A 还没创建完，另一个 Bean B 又来依赖它，就说明发生了循环依赖</font>。可以通过 [三级缓存解决循环依赖问题步骤：](26、三级缓存是如何解决循环依赖的问题的？#三级缓存解决循环依赖问题步骤：) 实例来理解。

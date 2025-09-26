@@ -28,3 +28,58 @@ public class ProdConfig {
 ```
 
 这样，启动应用时，Spring 将根据激活的 Profile 加载相应的配置。在这个例子中，如果激活的是 prod Profile，将创建并使用 ProdConfig 中的 Bean；
+
+## spring.profiels.actice的替代
+
+### 使用spring.config.import
+
+**==Spring Boot 2.4为了提升对Kubernetes的支持 将 `spring.profiels.actice` 作废了，可以使用`spring.config.import`替换它==**：
+```yml
+spring:  
+  application:  
+    name: paicoding  
+  #  Spring Boot 2.4为了提升对Kubernetes的支持 将 spring.profiles 作废了  
+  #  profiles:  
+  #    active: dal,web,config,image  # 替换上面作废的spring.profiels.actice配置参数  
+  config:  
+    import: application-dal.yml,application-web.yml,application-config.yml,application-image.yml,application-email.yml,application-rabbitmq.yml,application-ai.yml,application-pay.yml
+```
+
+### 使用Maven中profiles标签
+
+```xml
+<profiles>  
+    <!-- 本地开发 -->  
+    <profile>  
+        <id>dev</id>  
+        <properties>  
+            <env>dev</env>  
+        </properties> 
+        <!-- 指定默认环境 -->  
+        <activation>  
+            <activeByDefault>true</activeByDefault>  
+        </activation>  
+    </profile>  
+    <!-- 测试 -->  
+    <profile>  
+        <id>test</id>  
+        <properties>  
+            <env>test</env>  
+        </properties>  
+    </profile>  
+    <!-- 预发 -->  
+    <profile>  
+        <id>pre</id>  
+        <properties>  
+            <env>pre</env>  
+        </properties>  
+    </profile>  
+    <!-- 生产 -->  
+    <profile>  
+        <id>prod</id>  
+        <properties>  
+            <env>prod</env>  
+        </properties>  
+    </profile>  
+</profiles>
+```

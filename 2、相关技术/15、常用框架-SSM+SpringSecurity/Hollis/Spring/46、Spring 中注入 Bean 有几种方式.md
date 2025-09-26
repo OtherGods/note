@@ -1,3 +1,5 @@
+#Autowired注解对字段、构造器、setter方法注入 #Resource对字段、setter方法注入 #构造器注入（不需要使用Autowired、Resource，且没有多个构造器的情况） #DubboReference注入 #使用xml配置文件 
+
 # 典型回答
 
 注入 Bean，就是说已经有一个 Bean 了，我想在其他的 Bean 中使用它，就要注入。比如场景的我们在 Service 中注入Dao。

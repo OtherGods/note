@@ -192,7 +192,7 @@ public @interface EnableAutoConfiguration {}
 
 ### 3.2.2、`AutoConfigurationImportSelector` 选择配置类
 
-过程中设计到定义`BeanDefinition`的类：[3、BeanFactoryPostProcessor](1、常用类、接口、方法……#3、BeanFactoryPostProcessor)
+过程中涉及到定义`BeanDefinition`的类：[3、BeanFactoryPostProcessor](1、常用类、接口、方法……#3、BeanFactoryPostProcessor)
 
 Spring Boot 启动时会执行 `AbstractApplicationContext.refresh()` →  
 `invokeBeanFactoryPostProcessors()` → `ConfigurationClassPostProcessor`，  

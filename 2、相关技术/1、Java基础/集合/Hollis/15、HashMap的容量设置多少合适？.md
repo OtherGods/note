@@ -65,5 +65,11 @@ static int capacity(int expectedSize) {
 
 可是，大的性能优化，不就是一个一个的优化细节堆叠出来的吗？
 
-再不济，以后你写代码的时候，使用Maps.newHashMapWithExpectedSize(7);的写法，也可以让同事和老板眼前一亮。
+再不济，以后你写代码的时候，使用
+```java
+import com.google.common.collect.Maps;
+
+Maps.newHashMapWithExpectedSize(7);
+```
+的写法，也可以让同事和老板眼前一亮。
 

@@ -1,3 +1,5 @@
+#Componment注解及其衍生注解 #Bena注解 #xml配置文件 #在Configuration注解标注的类上使用Import注解  
+
 # 典型回答
 
 Spring 的 Bean 的创建有以下几种方式，从常见到不常见开始逐一列举：

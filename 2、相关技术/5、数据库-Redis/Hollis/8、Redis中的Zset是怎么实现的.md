@@ -1,4 +1,4 @@
-#redis有序集合 #ziplist #listpack #hash #skiplist 
+#redis有序集合 #ziplist #listpack（redis7中使用紧凑列表不再使用压缩列表） #hash用于映射member和score（等值查询更快） #skiplist用于对元素的排序（使用score排序），查找时间复杂度可以降低到logN（范围查询更快） #在Zset中元素数小于128、元素大小小于64时用压缩列表存数据，否则用跳跃表
 
 # 1、典型回答
 

@@ -1,4 +1,12 @@
+#传统的应用类加载器只能加载路径下的直接jar包，不能加载jar包中的jar包（也就是fatjar），SpringBoot自定义的类加载器先加载指定路径下的类和jar而无需解压fatjar到临时目录 
+
 # 典型回答
+
+1. SpringBoot使用自定义类加载器专门加载FatJAR这种嵌套的jar，**直接读取嵌套在 JAR 中的 JAR**，无需解压
+   - Fat JAR 内部结构：
+    - `BOOT-INF/classes/`：你的应用代码
+    - `BOOT-INF/lib/`：所有依赖的第三方 JAR
+2. 类加载顺序调整：SpringBoot自定义的类加载器`LaunchedURLClassLoader`先加载FatJAR中的字节码，再加载FatJAR依赖的字节码，最后才委托给父加载器
 
 **传统的采用双亲委派的类加载机制大家都知道，要加载一个类的时候，先委托父类加载器加载该类；如果父类加载器无法找到（类不存在），才由当前 ClassLoader 加载；这样保证了核心类库（rt.jar）不会被重复加载，避免了类冲突问题。**
 
@@ -29,7 +37,7 @@ Talk is Cheap，Show me the Code：
 
 https://github.com/joansmith/spring-boot/blob/master/spring-boot-tools/spring-boot-loader/src/main/java/org/springframework/boot/loader/LaunchedURLClassLoader.java
 
-以下是LaunchedURLClassLoader 的源码：
+以下是 LaunchedURLClassLoader 的源码：
 ```java
 @Override  
     protected Class<?> loadClass(String name, boolean resolve)  

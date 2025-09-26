@@ -1,4 +1,4 @@
-#volatile #volatile原子性 
+#volatile #volatile不能保证原子性 #volatile只能保证有序性和可见性
 # 典型回答
 
 volatile通常被比喻成”轻量级的synchronized“，也是Java并发编程中比较重要的一个关键字。和synchronized不同，volatile是一个变量修饰符，只能用来修饰变量。无法修饰方法及代码块等。

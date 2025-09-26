@@ -1,3 +1,6 @@
+
+参考：[2、能不能谈谈你对线程安全的理解？](2、相关技术/2、JUC/Hollis/Java并发/2、能不能谈谈你对线程安全的理解？.md)
+
 # 典型回答
 
 Spring的Bean是否线程安全，这个要取决于他的作用域。Spring的Bean有多种作用域，其中用的比较多的就是Singleton和Prototype。

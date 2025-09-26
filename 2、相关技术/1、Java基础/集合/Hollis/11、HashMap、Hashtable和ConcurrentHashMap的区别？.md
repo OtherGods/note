@@ -31,7 +31,7 @@ ConcurrentHashMap在JDK 1.8中，采用了一种新的方式来实现线程安�
 
 ## 遍历方式的内部实现上不同
 
-1. HashMap使用**EntrySet**进行遍历，即先获取到HashMap中所有的键值对(Entry)，然后遍历Entry集合。支持fail-fast，也就是说在遍历过程中，若HashMap的结构被修改（添加或删除元素），则会抛出ConcurrentModificationException。如果只需要遍历HashMap中的key或value，可以使用**KeySet**或**Values**来遍历。
+1. HashMap使用**entrySet()** 进行遍历，即先获取到HashMap中所有的键值对(Entry)，然后遍历Entry集合。支持fail-fast，也就是说在遍历过程中，若HashMap的结构被修改（添加或删除元素），则会抛出ConcurrentModificationException。如果只需要遍历HashMap中的key或value，可以使用**KeySet**或**Values**来遍历。
 2. Hashtable使用**Enumeration**进行遍历，即获取Hashtable中所有的key，然后遍历key集合。这个过程也会判断是否存在并发修改：
 ```java
 public T next() {

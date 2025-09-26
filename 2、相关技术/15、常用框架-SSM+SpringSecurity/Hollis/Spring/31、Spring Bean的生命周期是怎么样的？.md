@@ -34,10 +34,11 @@
 7. **调用BeanPostProcessor的后置处理方法**：
 	- 在Bean初始化之后，再次允许BeanPostProcessor对Bean进行处理。BeanPostProcessor的postProcessAfterInitialization方法会在此时被调用。
 	- 由**AbstractAutowireCapableBeanFactory**的**applyBeanPostProcessorsAfterInitialization**方法执行
-8. **注册Destruction回调**：
+8. **注册Destruction回调**：本质就是向Map中插入合适的数据用于应用销毁时的回调
    [20、Spring中shutdownhook作用是什么？](2、相关技术/15、常用框架-SSM+SpringSecurity/Hollis/Spring/20、Spring中shutdownhook作用是什么？.md)
 	- 如果Bean实现了DisposableBean接口或在Bean定义中指定了自定义的销毁方法，Spring容器会为这些Bean注册一个销毁回调，确保在容器关闭时能够正确地清理资源。
-	- 在**AbstractAutowireCapableBeanFactory**类中的**registerDisposableBeanIfNecessary**方法中实现
+	- 在**AbstractAutowireCapableBeanFactory**类中的**registerDisposableBeanIfNecessary**方法中实现，这个方法的作用是向`DefaultSingletonBeanRegistry#disposableBeans`这个Map中添加kv，v是实现了`DisposableBean`接口的类的对象，k是beanName；
+	- 在应用接收到`kill -15`的信号时会触发SpringBoot启动时向JVM注册的回调任务（通过`Runtime.getRuntime().addShutdownHook(thread)`注册），这个任务会遍历`DefaultSingletonBeanRegistry#disposableBeans`这个Map，调用对应bean的销毁方法
 9. **Bean准备就绪**：
 	- 此时，Bean已完全初始化，可以开始处理应用程序的请求了。
 10. **调用DisposableBean的destroy方法**：

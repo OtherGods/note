@@ -1,3 +1,5 @@
+#基于Condition注解和Condition接口实现 #基于ConfigurationProperties注解和EnableConfigurationProperties注解实现 #基于Profile注解实现 
+
 # 典型回答
 
 在 Spring 应用中，**根据运行时的配置（比如数据库配置、配置文件、配置中心等）动态生成 Spring Bean** 是一种常见需求，特别是在面对多环境配置或者需要根据不同条件创建不同实例时。

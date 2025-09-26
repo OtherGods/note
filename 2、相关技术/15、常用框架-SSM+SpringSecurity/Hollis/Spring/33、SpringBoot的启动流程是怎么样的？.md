@@ -1,4 +1,8 @@
-#SpringBoot启动流程
+#SpringBoot启动流程 
+#SpringBoot启动分为两个步骤：创建SpringApplication、调用SpringApplication的run方法 
+#创建SpringApplication时会从默认配置文件（spring-factories）中加载应用上下文初始化器、监听器，同时设置web容器并确定主类 
+#调用SpringApplication的run方法时主要是创建上下文和刷新上下文 #刷新上下文中包含：自动装配、bean的创建、注册应用销毁时回调的任务、启动Tomcat/web应用 
+
 # 典型回答
 
 以下就是一个SpringBoot启动的入口，想要了解SpringBoot的启动过程，就从这里开始。

@@ -1,13 +1,13 @@
+#Spring中的事务管理是使用ThreadLocal保存当前线程和数据库连接的 
+
 # 典型回答
 
 Spring 的事务有多种实现，主要包括了声明式事务和编程式事务。
 
 [10、Spring中如何开启事务？](2、相关技术/15、常用框架-SSM+SpringSecurity/Hollis/Spring/10、Spring中如何开启事务？.md)
 
-**如果是我们常用的@Transactional这种声明式事务的话，在多线程情况下是无法生效的**。主要是<font color="red" size=5>因为@Transactional 的事务管理使用的是 ThreadLocal 机制来存储事务上下文，而 ThreadLocal 变量是线程隔离的，即每个线程都有自己的事务上下文副本</font>。因此，在多线程环境下，Spring 的声明式事务会“失效”，即新线程中的操作不会被包含在原有的事务中。
+**无论是声明式事务还是编程式事务，在多线程情况下是无法生效的**。主要是<font color="red" size=5>因为事务管理的核心是 TransactionSynchronizationManager，它使用的是 ThreadLocal 机制来存储事务上下文，而 ThreadLocal 变量是线程隔离的，即每个线程都有自己的事务上下文副本</font>。因此，在多线程环境下，Spring 的事务会“失效”，即新线程中的操作不会被包含在原有的事务中。
 [31、父子线程之间怎么共享、传递数据？](2、相关技术/2、JUC/Hollis/Java并发/31、父子线程之间怎么共享、传递数据？.md)
-
-不过，**如果需要管理跨线程的事务，我们可以使用编程式事务**，即自己用 TransactionTemplate 或PlatformTransactionManager 来控制事务的提交。
 
 # 扩展知识
 
