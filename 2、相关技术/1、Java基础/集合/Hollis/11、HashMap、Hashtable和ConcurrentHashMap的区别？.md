@@ -20,7 +20,7 @@ ConcurrentHashMap在JDK 1.8中，采用了一种新的方式来实现线程安�
 2. HashMap中，null可以作为键或者值都可以。
 3. ConcurrentHashMap中，key和value都不允许为null。
 
-[29、为什么ConcurrentHashMap不允许null值？](2、相关技术/1、Java基础/集合/Hollis/29、为什么ConcurrentHashMap不允许null值？.md)
+[29、为什么ConcurrentHashMap不允许null键值？](2、相关技术/1、Java基础/集合/Hollis/29、为什么ConcurrentHashMap不允许null键值？.md)
 
 ## 默认初始容量和扩容机制
 

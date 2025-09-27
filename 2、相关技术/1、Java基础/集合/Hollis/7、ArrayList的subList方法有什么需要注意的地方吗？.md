@@ -1,3 +1,5 @@
+#SubList是ArrayList内部类 #ArrayList中的subList方法返回SubList对象 #SubList类内部保存了ArrayList对象的引用、ArrayList底层数组的引用、起始偏移量、结束偏移量 
+
 # 典型回答
 
 List的subList方法**并没有创建一个新的List，而是使用了原List的视图，这个视图使用内部类SubList表示**。所以，我们不能把subList方法返回的List强制转换成ArrayList等类，因为他们之间没有继承关系。正如阿里巴巴Java编码规范所说：

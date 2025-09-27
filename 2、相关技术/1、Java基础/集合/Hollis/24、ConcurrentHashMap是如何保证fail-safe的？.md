@@ -1,3 +1,5 @@
+感觉讲了一堆废话，也没说怎么实现的
+
 ## 典型回答
 
 在 JDK 1.8 中，ConcurrentHashMap作为一个并发容器，他是解决了fail-fast的问题的，也就是说，他是一个fail-safe的容器。 通过以下两种机制来实现 fail-safe 特性：

@@ -1,3 +1,12 @@
+1. `fail-fast`：*==这种机制是为了防止因并发修改而出现意料之外的情况==*；迭代器在遍历原集合时一旦检测到集合发生了结构性修改（非迭代器自身方法）就立即抛出`ConcurrentModificationException`，**==快速失败而非继续冒险执行==**
+   - <font color="red" size=5>原理</font>是：在集合中保存modCount字段，创建迭代器时拷贝这个字段到迭代器expectedModCount字段，之后每次迭代都比较这两个字段
+   - `ArrayList`、`LinkedList`、`HashMap`、`HashTable`...
+1. `fail-safe`：*==这种机制是为了防止因并发修改而出现意料之外的情况==*；在迭代器遍历原集合时其他线程修改的是新的底层数据结构不是原有底层数据结构；
+	- <font color="red" size=5>原理</font>是：修改操作和迭代操作不在同一个底层数据结构上
+	- `fail-safe`是**弱一致性的**
+	- `CopyOnWriteArrayList`是`fail-safe`，每次增删元素时在新拷贝的数据上操作，修改完后更新COW对象底层数组指针为新数组，而迭代操作还在旧数组上
+	- `fail-safe`适用于读多写的情况
+
 # 典型回答
 
 在系统设计中，**快速失效(fail-fast)系统一种可以立即报告任何可能表明故障的情况的系统**。快速失效系统通常设计用于停止正常操作，而不是试图继续可能存在缺陷的过程。
@@ -19,7 +28,10 @@ public int divide(int dividend,int divisor){
 
 在Java中，集合类中有用到fail-fast机制进行设计，一旦使用不当，触发fail-fast机制设计的代码，就会发生非预期情况。
 
-在集合类中，为了避免并发修改，会维护一个**expectedModCount**属性，他表示这个迭代器预期该集合被修改的次数。还有一个**modCount**属性，他表示该集合实际被修改的次数。在集合被修改时，会去比较modCount和expectedModCount的值，如果不一致，则会触发fail-fast机制，抛出ConcurrentModificationException。
+判断是否发生fail-fast的方式：
+- 在 **==集合中有一个modCount属性==**，它表示该 **==集合实际被修改的次数==**。
+- 在集合类中，为了避免并发修改，在 **==创建迭代器时会在迭代器中维护一个expectedModCount属性==**，它 **==是集合类中modCount属性的快照==**，它表示这个迭代器预期该集合被修改的次数。
+- 在合适的时机，比如迭代集合时，会去 **==比较modCount和expectedModCount的值==**，如果不一致，则会触发fail-fast机制，抛出ConcurrentModificationException。
 
 **fail-safe 机制是为线程安全的集合准备的，可以避免像 fail-fast 一样在并发使用集合的时候，不断地抛出异常**。 
 
@@ -31,7 +43,7 @@ public int divide(int dividend,int divisor){
 
 **ConcurrentModificationException**，当方法检测到对象的并发修改，但不允许这种修改时就抛出该异常。
 
-在Java中， 如果在foreach 循环里对某些集合元素进行元素的 remove/add 操作的时候，就会触发fail-fast机制，进而抛出ConcurrentModificationException。
+在Java中，如果在foreach 循环里对某些集合元素进行元素的 remove/add 操作（结构性修改）的时候，就会触发fail-fast机制，进而抛出ConcurrentModificationException。
 
 如以下代码：
 ```java
@@ -125,9 +137,9 @@ private void fastRemove(int index) {
     modCount++;
     int numMoved = size - index - 1;
     if (numMoved > 0)
-        System.arraycopy(elementData, index+1, elementData, index,
-                         numMoved);
-    elementData[--size] = null; // clear to let GC do its work
+        System.arraycopy(elementData, index+1, elementData, index, numMoved);
+    elementData[--size] = null; 
+    // clear to let GC do its work
 }
 ```
 
@@ -143,7 +155,7 @@ private void fastRemove(int index) {
 
 为了避免触发fail-fast机制，导致异常，我们可以使用Java中提供的一些**采用了fail-safe机制的集合类**。
 
-这样的<font size=5 color="red">集合容器在遍历时不是直接在集合内容上访问的，而是先复制原有集合内容，在拷贝的集合上进行遍历。</font>
+这样的<font size=5 color="red">集合容器在遍历时不是直接在集合内容上访问的，而是先复制原有集合内容，在拷贝的集合快照上进行遍历。</font>
 
 **java.util.concurrent包下的容器都是fail-safe的，可以在多线程下并发使用，并发修改。同时也可以在foreach中进行add/remove** 。
 我们拿CopyOnWriteArrayList这个fail-safe的集合类来简单分析一下。

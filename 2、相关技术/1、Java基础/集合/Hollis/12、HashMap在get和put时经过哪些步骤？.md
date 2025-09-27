@@ -1,6 +1,6 @@
 # 典型回答
 
-对于HashMap来说，**底层是基于散列算法**实现，散列算法分为**散列再探测**和**拉链式**。**HashMap 则使用了拉链式的散列算法**，即采用`数组+链表/红黑树`来解决hash冲突，数组是HashMap的主体，链表主要用来解决哈希冲突。这个数组是Entry类型，它是HashMap的内部类，每一个Entry包含一个key-value键值对
+对于HashMap来说，**底层是基于散列算法**实现，散列算法参考：[9、hash冲突通常怎么解决？](2、相关技术/1、Java基础/集合/Hollis/9、hash冲突通常怎么解决？.md)。**HashMap 则使用了拉链式的散列算法**，即采用`数组+链表/红黑树`来解决hash冲突，数组是HashMap的主体，链表主要用来解决哈希冲突。这个数组是Entry类型，它是HashMap的内部类，每一个Entry包含一个key-value键值对
 
 ## get方法
 
@@ -179,7 +179,7 @@ final V putVal(int hash, K key, V value, boolean onlyIfAbsent, boolean evict) {
 ### HashMap定位tableIndex的骚操作
 
 通过源码发现，hashMap定位tableIndex的时候，是通过(table.length - 1) & (key.hashCode ^ (key.hashCode >> 16))，而不是常规的key.hashCode % (table.length)呢？
-1. 为什么是用&而不是用%：因为&是基于**内存的二进制直接运算，比转成十进制的取模快的多**。以下运算等价：X % 2^n = X & (2^n – 1)。这也是hashMap每次扩容都要到2^n的原因之一
+1. 为什么是用&而不是用%：因为&是基于 **==内存的二进制直接运算，比转成十进制的取模快的多==**。以下运算等价：X % 2^n = X & (2^n – 1)。这也是hashMap每次扩容都要到2^n的原因之一
 2. 为什么用key.hash ^ (key.hash >> 16)而不是用key.hash：这是因为**增加了扰动计算，使得hash分布的尽可能均匀**。因为hashCode是int类型，虽然能映射40亿左右的空间，但是，HashMap的table.length毕竟不可能有那么大，所以为了使hash%table.length之后，分布的尽可能均匀，就需要对实例的hashCode的值进行扰动，说白了，就是将hashCode的高16和低16位，进行异或，使得hashCode的值更加分散一点。
 
 ## HashMap的key为null时，没有hashCode是如何存储的？

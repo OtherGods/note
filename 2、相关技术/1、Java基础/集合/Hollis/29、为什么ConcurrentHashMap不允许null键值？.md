@@ -1,3 +1,6 @@
+#不允许存在null键是因为：无法定位键值的位置，在HashMap中null键在数组的第一个位置 
+#不允许存在null值是因为：ConcurrentHashMap这种同步容器只能保证单个操作的原子性，多个操作的原子性没办法保证，如果ConcurrentHashMap中允许为null，那么get（key）方法返回null时存在二义性，不能确定是Map中无这个键值对还是值为null，无法再次使用contains（key）方法判断元素是否存在，因为get（key）和contains（key）是两个操作，非原子的
+
 # 典型回答
 
 <font color="blue" size=5>总结本文就是</font>：`ConcurrentHashMap`不允许null键和值，这种同步容器只能保证 *==单个操作是原子性==* 的，*==多个操作无法保证原子性==*，所以在`ConcurrentHashMap#get`获取到的值为null时，无法通过`ConcurrentHashMap#contains`判断是这个键不存在还是对应的值为null，<font color="red" size=5>因为 get 和 contains 不是原子操作</font>；而`HashMap`中可以存储null的键和值是因为HashMap是为单线程设计的，不需要原子性保证并发线程安全。

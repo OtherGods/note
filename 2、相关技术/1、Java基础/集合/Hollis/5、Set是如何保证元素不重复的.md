@@ -1,3 +1,6 @@
+- `HashSet`是基于底层`HashMap`中的`hashCode`和`equals`方法，在`HashMap#equals`方法中比较Map的键是否相等值是否相等
+- `TreeSet`默认是基于`TreeMap`，`TreeMap`实现了`SortedMap`，`SortedMap`中的key必须实现`Comparable`接口，可以通过`Comparable#compareTo`方法比较键是否相等
+
 # 典型回答
 
 在Java的Set体系中，根据实现方式不同主要分为两大类。HashSet和TreeSet。
@@ -26,7 +29,7 @@ TreeMap是**按key排序**的，元素在插入TreeSet时 **compareTo()** 方法
 
 顾名思义，BitSet是位集合，通常来说，**位集合的底层的数据结构是一个bit数组（`long[] words`），如果第n位为1，则表明数字n在该数组中**。
 
-举个例子，如果调用BitSet#set(10)，业务语意是把10放到BitSet中，内部的操作则是通过把二进制的第十位（低位）置为1。这样，就代表BitSet中包含了10这个数字。
+举个例子，如果调用`BitSet#set(10)`，业务语意是把10放到BitSet中，内部的操作则是通过把二进制的第十位（低位）置为1。这样，就代表BitSet中包含了10这个数字。
 
 不过，对于*Java中的BitSet来讲，因为Java不知道bit类型，所以它的底层结构并不是一个bit类型数组，但是也不是一个byte类型数组，而是一个long类型的数组*，这样设置的目的是因为long有64位，每次可以读取64位，在进行set或者or操作的时候，for循环的次数会更少，提高了性能。
 

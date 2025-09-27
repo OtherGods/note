@@ -1,3 +1,7 @@
+#Stream中使用Fork/Join框架将一个大任务拆分成多个小任务在ForkJoinPool线程池中执行这些小任务，最后将这些小任务的结果合并起来 
+#所有并行流底层都使用ForkJoinPool中的公共线程池 
+#判断是否需要使用并行流的依据：数据量大、任务计算复杂、多核CPU 
+
 # 典型回答
 
 Java中的Stream API提供了一种高效且易于使用的方式来处理数据集合。其中，Stream的并行流（parallel stream）是一种特别强大的工具，它可以显著提高数据处理的效率，特别是在处理大型数据集时。
@@ -27,7 +31,7 @@ Stream<String> stream = list.stream();
 Stream<String> parallelStream = list.parallelStream();
 ```
 
-可以看到，这里调用了一个evaluate方法，然后再方法中有一个是否并行流的判断——isParallel()，如果是并行流，那么执行的是terminalOp.evaluateParallel，接下来看一下具体实现。
+可以看到，这里调用了一个evaluate方法，然后在方法中有一个是否并行流的判断——isParallel()，如果是并行流，那么执行的是terminalOp.evaluateParallel，接下来看一下具体实现。
 ![image.png](https://raw.githubusercontent.com/OtherGods/MaterialImage/main/img/202507092029103.png)
 
 随便先找一个打开看下，如MatchOp中：

@@ -20,6 +20,7 @@ Java的整个集合框架中，主要分为List，Set，Queue，Stack，Map等�
 
 1. **Collection 是一个集合接口**：它提供了对集合对象进行基本操作的通用接口方法。Collection接口在Java 类库中有很多具体的实现。是list，set等的父接口。
 2. **Collections 是一个包装类**：它包含有各种有关集合操作的静态多态方法。此类不能实例化，就像一个工具类，服务于Java的Collection框架。
+   - 常见方法：排序（sort）、synchronizedSet、synchronizedList、synchronizedMap等
 
 日常开发中，不仅要了解Java中的Collection及其子类的用法，还要了解Collections用法。可以提升很多处理集合类的效率。
 
@@ -49,7 +50,7 @@ class AbstractList<E> implements Iterable<E> {
 ### 为什么不把Iterable和Iterator合成一个使用
 
 1. 通过Javadoc文档我们可以发现，Iterable和Iterator并不是同时出现的，Iterator于1.2就出现了，目的是为了代替Enumeration，而Iterable则是1.5才出现的
-2. 将<是否可以迭代>和<迭代方式>抽出来，更符合单一职责原则，如果抽出来，迭代方式就可以被多个可迭代的集合复用，更符合面向对象的特点。
+2. 将`<是否可以迭代>`和`<迭代方式>`抽出来，更符合单一职责原则，如果抽出来，迭代方式就可以被多个可迭代的集合复用，更符合面向对象的特点。
 
 
 

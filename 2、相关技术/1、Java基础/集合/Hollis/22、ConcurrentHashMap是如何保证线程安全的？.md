@@ -1,3 +1,7 @@
+#在jdk7中使用分段锁，ConcurrentHashMap内部使用Segment数组做分段，每个Segment内部又保存了一个数组，该数组中是整个Map中的一部分数据；Segment继承自ReentrantLock，通过Lock确保线程安全 
+#在jdk8中锁的粒度更细，ConcurrnetHashMap内部使用Node数组保存所有数据；使用CAS和Synchronized确保线程安全 
+#在jdk8中向ConcurrentHashMap中添加元素时会先判断对应桶中是否为空，如果不为空就使用CAS方式添加节点，否则通过Synchronized确保线程安全 
+
 # 典型回答
 
 <font color="red" size=5>在JDK 1.7中，ConcurrentHashMap使用了分段锁技术，即将哈希表分成多个段，每个段拥有一个独立的锁</font>。这样可以在**多个线程同时访问哈希表时，只需要锁住需要操作的那个段，而不是整个哈希表**，从而提高了并发性能。

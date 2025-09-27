@@ -1,3 +1,7 @@
+#初始化桶时使用CAS的方式，如果有其他线程在初始化桶（第一次向桶中添加数据），当前线程就通过Thread中yeild方法释放CPU 
+#向桶中添加元素时使用CAS和synchronized的方式，如果桶中没有元素，就是用CAS确保线程安全，否则使用synchronized
+
+
 # 典型回答
 
 对于JDK1.8来说，如果用一句话来讲的话，ConcurrentHashMap是通过**synchronized和CAS自旋**保证的线程安全，要想知道ConcurrentHashMap是如何加锁的，就要知道HashMap在哪些地方会导致线程安全问题，如初始化桶数组阶段和设置桶，插入链表，树化等阶段，都会有并发问题。
@@ -76,7 +80,7 @@ ConcurrentSkipListMap 和 ConcurrentHashMap 的主要区别：
 Vector是java.util包中的一个类。 SynchronizedList是java.util.Collections中的一个静态内部类。
 在多线程的场景中可以直接使用Vector类，也可以使用Collections.synchronizedList(List list)方法来返回一个线程安全的List。
 1. 如果使用add方法，那么他们的扩容机制不一样。 
-2. SynchronizedList可以指定锁定的对象。即锁粒度是同步代码块。而Vector的锁粒度是同步方法。
+2. **SynchronizedList可以指定锁定的对象，即锁粒度是同步代码块**。而**Vector的锁粒度是同步方法**。
 3. SynchronizedList有很好的扩展和兼容功能。他可以将所有的List的子类转成线程安全的类。 
 4. 使用SynchronizedList的时候，进行遍历时要手动进行同步处理。
 5. SynchronizedList可以指定锁定的对象。

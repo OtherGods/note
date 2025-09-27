@@ -98,8 +98,6 @@ public static void main(String[] args) throws InterruptedException
 }
 ```
 
-
-
 ### 1.4 公平锁
 
 公平锁即尽量以请求锁的顺序来获取锁。同时有多个线程在等待一个锁，当这个锁被释放时，等待时间最久的线程（最先请求的线程）会获得该锁，这种就是公平锁。
@@ -158,17 +156,13 @@ synchronized后面括号里是类，如果线程进入，则线程在该类中�
 ### 2.2 Lock
 
 Lock接口主要相关的类和接口如下。
-
-![Lock](https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2017/12/27/160985d95e5fa4ab~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.awebp)Lock
-
-
+![image.png](https://raw.githubusercontent.com/OtherGods/MaterialImage/main/img/202509271951743.png)
 
 ReadWriteLock是读写锁接口，其实现类为ReetrantReadWriteLock。ReetrantLock实现了Lock接口。
 
 #### 2.2.1 Lock
 
 Lock中有如下方法：
-
 ```java
 public interface Lock {
 	void lockInterruptibly() throws InterruptedException;  
@@ -189,7 +183,6 @@ public interface Lock {
 #### 2.2.2 ReetrantLock
 
 实现了Lock接口，可重入锁，内部定义了公平锁与非公平锁。默认为非公平锁：
-
 ```java
 public ReentrantLock() {  
   sync = new NonfairSync();  
@@ -198,7 +191,6 @@ public ReentrantLock() {
 ```
 
 可以手动设置为公平锁：
-
 ```java
 public ReentrantLock(boolean fair) {  
   sync = fair ? new FairSync() : new NonfairSync();  
@@ -225,7 +217,6 @@ public interface ReadWriteLock {
 #### 2.2.4 ReentrantReadWriteLock
 
 ReentrantReadWriteLock同样支持公平性选择，支持重进入，锁降级。
-
 ```java
 public class RWLock {
     static Map<String, Object> map = new HashMap<String, Object>();
@@ -260,10 +251,28 @@ public class RWLock {
 
 ### 3.1 synchronized和lock的区别
 
+| 功能对比            | synchronized                                                   | Lock                                                                                                                                                                                          |
+| --------------- | -------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 锁种类             | 可重入锁、非公平锁                                                      | 可重入锁、公平锁、非公平锁、可中断锁、读写锁                                                                                                                                                                        |
+| 使用方式            | 隐式获取/释放锁                                                       | 显式调用l`ock(`)/`unlock()`                                                                                                                                                                       |
+| 遇到异常            | 自动释放锁，不会导致死锁发生                                                 | 如果没有主动通过`unLock()`去释放锁，那么不会释放锁，很可能造成死锁现象                                                                                                                                                      |
+| 同步队列            | `ObjectMonitor`的`entrySet`                                     | AQS中的CLH先进先出队列                                                                                                                                                                                |
+| 条件队列            | 通过 `Object.wait()`, `notify()`, `notifyAll()` 操作，一个锁只能有一个等待队列。 | 通过 `Condition.await()`, `signal()`, `signalAll()` 操作，一个锁可以创建多个 `Condition`。<br><br>可以实现更精细的线程通知和唤醒。例如，生产者-消费者模型中，可以分别唤醒等待“非空”和“非满”条件的线程，避免了无效的“全通知”（`notifyAll()`），从而减少了不必要的线程争用和上下文切换，提升了性能。 |
+| 尝试获取锁、有等待事件的获取锁 | 无，获取锁失败后会一直阻塞                                                  | `tryLock()`、`tryLock(long, TimeUnit)`方法                                                                                                                                                       |
+| 等待获取锁的线程是否可以被打断 | 获取锁失败后一直等待锁，等待时无法打断                                            | `lockInterruptibly()`方法                                                                                                                                                                       |
+
+性能对比：`ReentrantLock`在竞争激烈或并发高的情况下性能更好，在竞争不激烈的情况下`synchronized`性能更好；在日常开发中，鉴于 `synchronized` 的简单性和在无竞争/低竞争场景下的卓越性能，它仍然是大多数情况下的首选。
+
+| 性能对比     | synchronized                                          | ReentrantLock                                                                                                    |
+| -------- | ----------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| 实现       | C++实现，完全依赖JVM内置的 **`ObjectMonitor`** 实现，与JVM深度绑定。     | 基于 **`AbstractQueuedSynchronizer (AQS)`** 这个Java类库实现的同步器框架。                                                      |
+| 获取锁失败的线程 | **==直接被挂起==，进ObjectMonitor的entrySet**，线程状态变为 BLOCKED。 | **先尝试==CAS自旋==一定次数**，尝试获取锁。**失败后，才会将线程包装为Node节点==加入AQS队列==，并==可能被挂起==**。                                         |
+| 挂起与唤醒    | 通过 **==操作系统内核的系统调用==** 来完成线程的挂起和唤醒                    | 挂起和唤醒线程使用 CAS + `LockSupport.park()`、`LockSupport.unpark()`。<br>虽然最终也可能涉及系统调用，但 **==与AQS的状态机制紧密结合，可以减少不必要的唤醒==** |
+| 核心开销     | **==用户态到内核态的切换==**、**==线程上下文切换==**                    | **==CAS操作==**（用户态）、**==可能的用户态/内核态切换==**。在竞争不极端激烈时，CAS自旋可能成功，避免了昂贵的切换开销。                                          |
 - Lock是一个接口，而synchronized是Java中的关键字，synchronized是内置的语言实现；
 - synchronized在发生异常时，会自动释放线程占有的锁，因此不会导致死锁现象发生；而Lock在发生异常时，如果没有主动通过unLock()去释放锁，则很可能造成死锁现象，因此使用Lock时需要在finally块中释放锁；
 - 性能上来说，在资源竞争不激烈的情形下，Lock性能稍微比synchronized差点（编译程序通常会尽可能的进行优化synchronized）。但是当同步非常激烈的时候，synchronized的性能一下子能下降好几十倍。而ReentrantLock确还能维持常态；
-  <font color = "blue">**资源竞争激烈的解释**</font>：在synchronized使用的时候，假设有两个线程竞争资源，首先A线程获取锁之后，锁是偏向锁，当线程B开始获取锁的时候，如果没有成功获取锁，那么锁就会升级为轻量级锁（假设：CAS需要循环10次锁才会升级为重量级锁），那么当B线程竞争资源的时候某个线程在CAS上循环的次数达超过10次那么锁才会升级为重量级锁<font color = "red">**（可以称之为资源竞争激烈）**</font>，如果线程B和A竞争资源的时候在CAS上循环的次数没有超过10次，那么轻量级锁不会升级为重量级锁<font color = "red">**（可以称之为资源竞争不激烈）**</font>。
+  <font color = "blue">资源竞争激烈的解释</font>：在synchronized使用的时候，假设有两个线程竞争资源，首先A线程获取锁之后，锁是偏向锁，当线程B开始获取锁的时候，如果没有成功获取锁，那么锁就会升级为轻量级锁（假设：CAS需要循环10次锁才会升级为重量级锁），那么当B线程竞争资源的时候某个线程在CAS上循环的次数达超过10次那么锁才会升级为重量级锁<font color = "red">（可以称之为资源竞争激烈）</font>，如果线程B和A竞争资源的时候在CAS上循环的次数没有超过10次，那么轻量级锁不会升级为重量级锁<font color = "red">（可以称之为资源竞争不激烈）</font>。
 - lock接口下的锁中定义了一些synchronized关键字没有的方法，如下：
   - synchronized是非公平锁，在lock接口下即有公平锁，也有非公平锁
   - Lock可以让等待锁的线程响应中断（这个说的也就是Lock类种的lockInterruptibly方法），而synchronized却不行，使用synchronized时，等待的线程会一直等待下去，不能够响应中断；
@@ -368,9 +377,6 @@ JDK1.5中，synchronized是性能低效的。因为这是一个重量级操作�
 ## 4. 总结
 
 本文主要对并发编程中的锁机制synchronized和lock，进行详解。synchronized是基于JVM实现的，内置锁，Java中的每一个对象都可以作为锁。对于同步方法，锁是当前实例对象。对于静态同步方法，锁是当前对象的Class对象。对于同步方法块，锁是Synchonized括号里配置的对象。Lock是基于在语言层面实现的锁，Lock锁可以被中断，支持定时锁。Lock可以提高多个线程进行读操作的效率。通过对比得知，Lock的效率是明显高于synchronized关键字的，一般对于数据结构设计或者框架的设计都倾向于使用Lock而非Synchronized。
-
-#### 
-
 
 
 作者：aoho

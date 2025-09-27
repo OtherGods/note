@@ -1,3 +1,5 @@
+> JDK7HashMap死循环过程：两个线程（线程A和B）同时对HashMap进行扩容，扩容前两个线程分别会创建一个两倍于原数组的新数组（分别叫A数组和B数组），假设旧Map中某个桶中数据从为1指向2，1为头节点，线程A扩容时先记录当前节点（1）和当前节点的下个节点（2），然后A线程CPU时间片到了，释放CPU，B线程获取CPU，开始执行，B线程执行完毕B数组中的数据为2指向1，2为头节点，之后线程A获取CPU恢复上下文开始执行，A线程记录的当前节点为1，1的下一个节点为2（但实际上B桶中1的下一个节点为null，2的下一个节点为1），A线程开始扩容后，先将1节点挂载到A数组中，让A数组某桶的下一个节点变为1节点的下一个节点，A线程继续循环，当前节点为2，下一个节点为1，循环完毕后A数组中头节点为2，下一个节点为1，继续下一次循环就会发生死循环了
+
 这是一个非常典型的面试问题，但是只会出现在**1.7及以前的版本，1.8之后就被修复了**
 
 # 典型回答
@@ -45,7 +47,7 @@ void transfer(Entry[] newTable) {
 此时thread-1抢占到执行时间，开始执行：`e.next = newTable[i]; newTable[i] = e; e = next;`后，会变成如下样式：
 ![image.png](https://raw.githubusercontent.com/OtherGods/MaterialImage/main/img/202507092353147.png)
 
-接着，进行下一次循环，继续执行`e.next = newTable[i]; newTable[i] = e; e = next;`，如下图所示
+接着，进行下一次循环，继续执行`e.next = newTable[i]; newTable[i] = e; e = next;`，如下图所示【<font color="red" size=5>死循环前的数据状态</font>】
 ![image.png](https://raw.githubusercontent.com/OtherGods/MaterialImage/main/img/202507092357933.png)
 
 因为此时e!=null，且e.next = null，开始执行最后一次循环，结果如下：
