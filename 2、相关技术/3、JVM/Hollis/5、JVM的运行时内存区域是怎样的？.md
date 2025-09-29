@@ -51,7 +51,6 @@ Java 中的直接内存是通过使用 `java.nio` 包中的 `DirectByteBuffer` �
 
 [34、什么是方法区？是如何实现的？](2、相关技术/3、JVM/Hollis/34、什么是方法区？是如何实现的？.md)
 
-
 ## JVM 参数
 
 ### 打印JVM参数

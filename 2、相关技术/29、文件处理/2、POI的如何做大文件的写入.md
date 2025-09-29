@@ -155,7 +155,7 @@ SXSSFWorkbook workbook = new SXSSFWorkbook();
 
 ## 对比结果
 
-同样的一份文件写入，XSSFWorkbook需要1200+M，SXSSFWorkbook只需要148M。所以大文件的写入，使用SXSSFWorkbook是可以更加节省内存的。
+同样的一份文件写入（25M的excel），XSSFWorkbook需要1200+M，SXSSFWorkbook只需要148M。所以大文件的写入，使用SXSSFWorkbook是可以更加节省内存的。
 
 如果不方便使用arthas，也可以直接在JVM启动参数中增加Xmx150m的参数，运行以上两段代码，使用XSSFWorkbook的会抛出OOM：
 ![image.png](https://raw.githubusercontent.com/OtherGods/MaterialImage/main/img/202508081630102.png)

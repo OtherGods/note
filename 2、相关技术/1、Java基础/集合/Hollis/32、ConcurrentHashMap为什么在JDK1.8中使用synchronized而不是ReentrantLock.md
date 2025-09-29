@@ -37,8 +37,4 @@ static final class Segment<K,V> extends ReentrantLock implements Serializable {
 
 其次，<font color="blue" size=5>synchronized则是JVM内置的语义，JVM能够在运行时作出相应的优化措施，比如锁粗化、锁消除等</font>。这些是ReentrantLock不具备的。
 
-另外，<font color="blue" size=5>当获取锁获取失败时，synchronized会通过自旋避免线程被挂起，而ReentrantLock 会导致线程挂起</font>。而线程不需要挂起的话就可以减少线程上下文切换的开销。
-
-并且，<font color="blue" size=5>不需要挂起，就意味着也不需要唤醒，所以synchronized的获取锁的效率也就会更高一些</font>。
-
 还有就是，<font color="blue" size=5>ReentrantLock 是一个独立的对象，而 synchronized 是利用对象头（Object Header）中的一部分位标记来实现的锁</font>。对于 ReentrantLock，每次使用都需要实例化一个 ReentrantLock 对象。这个对象除了存储锁的状态外，还可能包含其他一些控制并发访问的状态信息，如持有锁的线程、等待队列等，并且还有AQS的支持中需要存储队列。<font color="blue" size=5>所以他的内存开销会更大一些</font>。

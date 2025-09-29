@@ -66,6 +66,10 @@ static final class Node {
     volatile Node next;
     // 节点中的线程，存储线程引用，指向当前节点所代表的线程。
     volatile Thread thread;
+	// 标记该节点在共享模式下等待
+	static final Node SHARED = new Node();  
+	// 标记该节点在独占模式中等待
+	static final Node EXCLUSIVE = null;
 }
 
 // 队列头节点，延迟初始化。只在setHead时修改
@@ -96,6 +100,11 @@ private Node enq(final Node node) {
 
 > AQS中的阻塞队列是一个CLH队列。CLH（Craig, Landin, and Hagersten）队列是一种用于实现自旋锁的有效数据结构。它是由Craig, Landin和Hagersten首次提出的，因此得名。
 
+## 独占模式下的当前线程`exclusiveOwnerThread`
+
+。。。
+
+
 # 扩展知识
 ## AQS有哪些实现？
 
@@ -116,6 +125,15 @@ AQS全称为AbstractQueuedSynchronizer，它提供了一个FIFO队列，可以�
 ### ReentrantLock
 
 [27、synchronized和reentrantLock区别？](2、相关技术/2、JUC/Hollis/Java并发/27、synchronized和reentrantLock区别？.md)
+
+### ThreadPoolExecutor中`HashSet<Worker> workers`
+
+存储在线程池（`HashSet`）中的工作线程，利用AQS来实现独占锁，用于控制线程的中断状态。
+
+### SynchronousQueue
+
+### ReentrantReadWriteLock
+
 
 ## 同步队列&条件队列
 
