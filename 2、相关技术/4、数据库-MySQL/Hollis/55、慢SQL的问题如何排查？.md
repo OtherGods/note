@@ -65,4 +65,4 @@ SELECT * FROM orders WHERE status = 'pending' ORDER BY gmt_created DESC;
 其实最难的不是解决问题，而是定位问题，因为一旦一个问题被定位到了，解决起来都比较容易。缺索引就加索引，join太多就拆分就好了。这里就不展开说了。
 
 下面是一个慢SQL排查的实际案例，和本文的思路是一样的：
-[慢SQL问题排查](10、线上问题排查/Hollis/慢SQL问题排查.md)
+[8、慢SQL问题排查](10、线上问题排查/Hollis/8、慢SQL问题排查.md)

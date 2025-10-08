@@ -74,7 +74,7 @@ vim 编辑器是 CentOS 系统中使用频率比较高的编辑器，掌握基�
 通过 `vim <文件名>` 的方式可以编辑某文档，如果文档名不存在，那么会新建一个文档来进行编辑。
 ![image.png](https://raw.githubusercontent.com/OtherGods/MaterialImage/main/img/202403252241485.png)
 
-vim 共分为三种模式，分别是**命令模式（Command mode）**，**输入模式（Insert mode）**和**底线命令模式（Last line mode）**。
+vim 共分为三种模式，分别是**命令模式（Command mode）**，**输入模式（Insert mode）** 和 **底线命令模式（Last line mode）**。
 
 ### 2.1 命令模式
 
