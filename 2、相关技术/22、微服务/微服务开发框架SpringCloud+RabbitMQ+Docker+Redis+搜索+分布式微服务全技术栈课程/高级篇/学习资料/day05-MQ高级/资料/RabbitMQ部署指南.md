@@ -26,7 +26,7 @@ docker pull rabbitmq:3.8-management
 
 在课前资料已经提供了镜像包：
 
-![image-20210423191210349](assets/image-20210423191210349.png) 
+![image-20210423191210349](2、相关技术/22、微服务/微服务开发框架SpringCloud+RabbitMQ+Docker+Redis+搜索+分布式微服务全技术栈课程/高级篇/学习资料/day05-MQ高级/资料/assets/image-20210423191210349.png) 
 
 上传到虚拟机中后，使用命令加载镜像即可：
 
