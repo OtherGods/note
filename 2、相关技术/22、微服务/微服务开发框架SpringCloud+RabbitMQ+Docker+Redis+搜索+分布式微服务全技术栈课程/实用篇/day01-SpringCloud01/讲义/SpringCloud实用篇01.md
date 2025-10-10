@@ -101,9 +101,9 @@ SpringCloud集成了各种微服务功能组件，并基于SpringBoot实现了�
 
 cloud-demo：父工程，管理依赖
 - `order-service`：订单微服务，负责订单相关业务
-  - 对应数据库`cloud-order`
+  - 对应数据库`cloud-order`中表`tb_order`
 - `user-service`：用户微服务，负责用户相关业务
-  - 对应数据库`cloud-user`
+  - 对应数据库`cloud-user`中表`tb_user`
 
 要求：
 - 订单微服务和用户微服务都必须有各自的数据库，相互独立
@@ -115,13 +115,13 @@ cloud-demo：父工程，管理依赖
 首先，将课前资料提供的`cloud-order.sql`和`cloud-user.sql`导入到mysql中：
 ![image-20210713211417049.png](https://raw.githubusercontent.com/OtherGods/MaterialImage/main/img/202510092243062.png)
 
-`cloud-user`表中初始数据如下：
+`tb_user`表中初始数据如下：
 ![image-20210713211550169.png](https://raw.githubusercontent.com/OtherGods/MaterialImage/main/img/202510092243814.png)
 
-`cloud-order`表中初始数据如下：
+`tb_order`表中初始数据如下：
 ![image-20210713211657319.png](https://raw.githubusercontent.com/OtherGods/MaterialImage/main/img/202510092244769.png)
 
-`cloud-order`表中持有`cloud-user`表中的id字段。
+`tb_order`表中持有`tb_user`表中的id字段。
 
 ### 2.2.2.导入demo工程
 
@@ -710,10 +710,10 @@ userservice:
 
 ## 5.5.环境隔离
 
-Nacos提供了namespace来实现环境隔离功能。
+Nacos提供了namespace、group来实现环境隔离功能，不同namespace、group之间的实例不能相互访问。
 - nacos中可以有多个namespace
 - namespace下可以有group、service等
-- 不同namespace之间相互隔离，例如不同namespace的服务互相不可见
+- 不同namespace、group之间相互隔离，例如不同namespace、group的服务互相不可见
 ![image-20210714000101516.png](https://raw.githubusercontent.com/OtherGods/MaterialImage/main/img/202510100022280.png)
 
 ### 5.5.1.创建namespace
