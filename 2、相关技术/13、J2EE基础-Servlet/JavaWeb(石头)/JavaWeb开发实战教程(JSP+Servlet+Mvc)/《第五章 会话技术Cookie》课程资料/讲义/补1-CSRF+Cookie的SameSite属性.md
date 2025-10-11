@@ -24,8 +24,7 @@ Set-Cookie:id=a3fWa;
 </form>
 ```
 
-用户一旦被诱骗发送这个表单，银行网站就会收到带有正确 Cookie 的请求。为了防止这种攻击，表单一般都带有一个随机 token（这就属于防止CSRF攻击的手段了，别的防御策略可以去看 [补2-CSRF+同源策略以及其他防御CSRF的策略+CORS](2、相关技术/13、J2EE基础-Servlet/JavaWeb(石头)/JavaWeb开发实战教程(JSP+Servlet+Mvc)/《第五章%20会话技术Cookie》课程资料/讲义/补2-CSRF+同源策略以及其他防御CSRF的策略+CORS.md)），告诉服务器这是真实请求。
-
+用户一旦被诱骗发送这个表单，银行网站就会收到带有正确 Cookie 的请求。为了防止这种攻击，表单一般都带有一个随机 token，告诉服务器这是真实请求。
 ```html
 <form action="your-bank.com/transfer" method="POST">
   <input type="hidden" name="token" value="dad3weg34">

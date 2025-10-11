@@ -172,8 +172,8 @@ paicoding:
 关于JWT、Session、Session Cookies、Cookies等相关概念可以参考：
 - [计算机网络-面试题-2](5、计算机网络/计算机网络-面试题-2.md)
 - [补1-CSRF+Cookie的SameSite属性](2、相关技术/13、J2EE基础-Servlet/JavaWeb(石头)/JavaWeb开发实战教程(JSP+Servlet+Mvc)/《第五章%20会话技术Cookie》课程资料/讲义/补1-CSRF+Cookie的SameSite属性.md)
-- [补2-CSRF+同源策略以及其他防御CSRF的策略+CORS](2、相关技术/13、J2EE基础-Servlet/JavaWeb(石头)/JavaWeb开发实战教程(JSP+Servlet+Mvc)/《第五章%20会话技术Cookie》课程资料/讲义/补2-CSRF+同源策略以及其他防御CSRF的策略+CORS.md)
-- [补3-跨域资源共享CORS详解](2、相关技术/13、J2EE基础-Servlet/JavaWeb(石头)/JavaWeb开发实战教程(JSP+Servlet+Mvc)/《第五章%20会话技术Cookie》课程资料/讲义/补3-跨域资源共享CORS详解.md)
+- [18.2、浏览器同源政策及其规避方法](5、计算机网络/Hollis/18.2、浏览器同源政策及其规避方法.md)
+- [18.3、跨域资源共享 CORS 详解](5、计算机网络/Hollis/18.3、跨域资源共享%20CORS%20详解.md)
 - [补4-JWT跨域认证的问题](2、相关技术/13、J2EE基础-Servlet/JavaWeb(石头)/JavaWeb开发实战教程(JSP+Servlet+Mvc)/《第五章%20会话技术Cookie》课程资料/讲义/补4-JWT跨域认证的问题.md)
 - [补5-前端安全系列之二：如何防止CSRF攻击？](2、相关技术/13、J2EE基础-Servlet/JavaWeb(石头)/JavaWeb开发实战教程(JSP+Servlet+Mvc)/《第五章%20会话技术Cookie》课程资料/讲义/补5-前端安全系列之二：如何防止CSRF攻击？.md)
 - [补6-鉴权：cookie、session、token、jwt、单点登录](2、相关技术/13、J2EE基础-Servlet/JavaWeb(石头)/JavaWeb开发实战教程(JSP+Servlet+Mvc)/《第五章%20会话技术Cookie》课程资料/讲义/补6-鉴权：cookie、session、token、jwt、单点登录.md)
