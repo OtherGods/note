@@ -38,13 +38,12 @@
 
 聪明的小明当然知道这种肯定是骗子，但还是抱着好奇的态度点了进去（请勿模仿）。果然，这只是一个什么都没有的空白页面，小明失望的关闭了页面。一切似乎什么都没有发生......
 
-在这平静的外表之下，黑客的攻击已然得手。小明的Gmail中，被偷偷设置了一个过滤规则，这个规则使得所有的邮件都会被自动转发到haker@hackermail.com。小明还在继续刷着邮件，殊不知他的邮件正在一封封地，如脱缰的野马一般地，持续不断地向着黑客的邮箱转发而去。
+在这平静的外表之下，黑客的攻击已然得手。小明的Gmail中，被偷偷设置了一个过滤规则，这个规则使得所有的邮件都会被自动转发到`haker@hackermail.com`。小明还在继续刷着邮件，殊不知他的邮件正在一封封地，如脱缰的野马一般地，持续不断地向着黑客的邮箱转发而去。
 
 不久之后的一天，小明发现自己的域名已经被转让了。懵懂的小明以为是域名到期自己忘了续费，直到有一天，对方开出了 $650 的赎回价码，小明才开始觉得不太对劲。
 
 小明仔细查了下域名的转让，对方是拥有自己的验证码的，而域名的验证码只存在于自己的邮箱里面。小明回想起那天奇怪的链接，打开后重新查看了“空白页”的源码：
-
-```ini
+```html
 <form method="POST" action="https://mail.google.com/mail/h/ewt1jmuj4ddv/?v=prf" enctype="multipart/form-data"> 
     <input type="hidden" name="cf2_emc" value="true"/> 
     <input type="hidden" name="cf2_email" value="hacker@hakermail.com"/> 
@@ -58,7 +57,7 @@
 复制代码
 ```
 
-> 这个页面只要打开，就会向Gmail发送一个post请求。请求中，执行了“Create Filter”命令，将所有的邮件，转发到“hacker@hakermail.com”。
+> 这个页面只要打开，就会向Gmail发送一个post请求。请求中，执行了“`Create Filter`”命令，将所有的邮件，转发到“`hacker@hakermail.com`”。
 
 > 小明由于刚刚就登陆了Gmail，所以这个请求发送时，携带着小明的登录凭证（Cookie），Gmail的后台接收到请求，验证了确实有小明的登录凭证，于是成功给小明配置了过滤器。
 
@@ -77,57 +76,43 @@
 CSRF（Cross-site request forgery）跨站请求伪造：攻击者诱导受害者进入第三方网站，在第三方网站中，向被攻击网站发送跨站请求。利用受害者在被攻击网站已经获取的注册凭证，绕过后台的用户验证，达到冒充用户对被攻击的网站执行某项操作的目的。
 
 一个典型的CSRF攻击有着如下的流程：
+- 受害者登录`a.com`，并保留了登录凭证（Cookie）。
+- 攻击者引诱受害者访问了`b.com`。
+- `b.com` 向 `a.com` 发送了一个请求：`a.com/act=xx`。
+- `a.com`接收到请求后，对请求进行验证，并确认是受害者的凭证，误以为是受害者自己发送的请求。
+- `a.com`以受害者的名义执行了`act=xx`。
+- 攻击完成，攻击者在受害者不知情的情况下，冒充受害者，让`a.com`执行了自己定义的操作。
 
-- [受害者登录a.com](https://link.juejin.cn/?target=http%3A%2F%2Fxn--a-f38al5vkzdt61bv7l.com)，并保留了登录凭证（Cookie）。
-- [攻击者引诱受害者访问了b.com](https://link.juejin.cn/?target=http%3A%2F%2Fxn--b-nv6ao4io8bp6po6e00mu47cda4311avpa330h.com)。
-- [b.com](https://link.juejin.cn/?target=http%3A%2F%2Fb.com) 向 [a.com](https://link.juejin.cn/?target=http%3A%2F%2Fa.com) 发送了一个请求：[a.com/act=xx。浏览器会…](https://link.juejin.cn/?target=http%3A%2F%2Fa.com%2Fact%3Dxx%E3%80%82%E6%B5%8F%E8%A7%88%E5%99%A8%E4%BC%9A%E9%BB%98%E8%AE%A4%E6%90%BA%E5%B8%A6a.com%E7%9A%84Cookie%E3%80%82)
-- a.com接收到请求后，对请求进行验证，并确认是受害者的凭证，误以为是受害者自己发送的请求。
-- a.com以受害者的名义执行了act=xx。
-- 攻击完成，攻击者在受害者不知情的情况下，冒充受害者，让a.com执行了自己定义的操作。
-
-#### 几种常见的攻击类型
+### 几种常见的攻击类型
 
 - GET类型的CSRF
-
-GET类型的CSRF利用非常简单，只需要一个HTTP请求，一般会这样利用：
-
-```ini
+  GET类型的CSRF利用非常简单，只需要一个HTTP请求，一般会这样利用：
+```html
  <img src="http://bank.example/withdraw?amount=10000&for=hacker" > 
-复制代码
 ```
-
-在受害者访问含有这个img的页面后，浏览器会自动向`http://bank.example/withdraw?account=xiaoming&amount=10000&for=hacker`发出一次HTTP请求。bank.example就会收到包含受害者登录信息的一次跨域请求。
+  在受害者访问含有这个img的页面后，浏览器会自动向`http://bank.example/withdraw?account=xiaoming&amount=10000&for=hacker`发出一次HTTP请求。bank.example就会收到包含受害者登录信息的一次跨域请求。
 
 - POST类型的CSRF
-
-这种类型的CSRF利用起来通常使用的是一个自动提交的表单，如：
-
-```ini
+  这种类型的CSRF利用起来通常使用的是一个自动提交的表单，如：
+```html
  <form action="http://bank.example/withdraw" method=POST>
     <input type="hidden" name="account" value="xiaoming" />
     <input type="hidden" name="amount" value="10000" />
     <input type="hidden" name="for" value="hacker" />
 </form>
 <script> document.forms[0].submit(); </script> 
-复制代码
 ```
-
-访问该页面后，表单会自动提交，相当于模拟用户完成了一次POST操作。
-
-POST类型的攻击通常比GET要求更加严格一点，但仍并不复杂。任何个人网站、博客，被黑客上传页面的网站都有可能是发起攻击的来源，后端接口不能将安全寄托在仅允许POST上面。
-
+  访问该页面后，表单会自动提交，相当于模拟用户完成了一次POST操作。
+  
+  POST类型的攻击通常比GET要求更加严格一点，但仍并不复杂。任何个人网站、博客，被黑客上传页面的网站都有可能是发起攻击的来源，后端接口不能将安全寄托在仅允许POST上面。
 - 链接类型的CSRF
-
-链接类型的CSRF并不常见，比起其他两种用户打开页面就中招的情况，这种需要用户点击链接才会触发。这种类型通常是在论坛中发布的图片中嵌入恶意链接，或者以广告的形式诱导用户中招，攻击者通常会以比较夸张的词语诱骗用户点击，例如：
-
-```ini
+  链接类型的CSRF并不常见，比起其他两种用户打开页面就中招的情况，这种需要用户点击链接才会触发。这种类型通常是在论坛中发布的图片中嵌入恶意链接，或者以广告的形式诱导用户中招，攻击者通常会以比较夸张的词语诱骗用户点击，例如：
+```html
   <a href="http://test.com/csrf/withdraw.php?amount=1000&for=hacker" taget="_blank">
   重磅消息！！
   <a/>
-复制代码
 ```
-
-由于之前用户登录了信任的网站A，并且保存登录状态，只要用户主动访问上面的这个PHP页面，则表示攻击成功。
+  由于之前用户登录了信任的网站A，并且保存登录状态，只要用户主动访问上面的这个PHP页面，则表示攻击成功。
 
 #### CSRF的特点
 
@@ -143,12 +128,10 @@ CSRF通常是跨域的，因为外域通常更容易被攻击者掌控。但是�
 CSRF通常从第三方网站发起，被攻击的网站无法防止攻击发生，只能通过增强自己网站针对CSRF的防护能力来提升安全性。
 
 上文中讲了CSRF的两个特点：
-
 - CSRF（通常）发生在第三方域名。
 - CSRF攻击者不能获取到Cookie等信息，只是使用。
 
 针对这两点，我们可以专门制定防护策略，如下：
-
 - 阻止不明外域的访问
   - 同源检测
   - Samesite Cookie
@@ -165,7 +148,6 @@ CSRF通常从第三方网站发起，被攻击的网站无法防止攻击发生�
 那么问题来了，我们如何判断请求是否来自外域呢？
 
 在HTTP协议中，每一个异步请求都会携带两个Header，用于标记来源域名：
-
 - Origin Header
 - Referer Header
 
@@ -201,7 +183,6 @@ CSRF通常从第三方网站发起，被攻击的网站无法防止攻击发生�
 根据上面的表格因此需要把Referrer Policy的策略设置成same-origin，对于同源的链接和引用，会发送Referer，referer值为Host不带Path；跨域访问则不携带Referer。例如：`aaa.com`引用`bbb.com`的资源，不会发送Referer。
 
 设置Referrer Policy的方法有三种：
-
 1. 在CSP设置
 2. 页面头部增加meta标签
 3. a标签增加referrerpolicy属性
@@ -217,13 +198,10 @@ CSRF通常从第三方网站发起，被攻击的网站无法防止攻击发生�
 
 另外在以下情况下Referer没有或者不可信：
 
-1.IE6、7下使用window.location.href=url进行界面的跳转，会丢失Referer。
-
-2.IE6、7下使用window.open，也会缺失Referer。
-
-3.HTTPS页面跳转到HTTP页面，所有浏览器Referer都丢失。
-
-4.点击Flash上到达另外一个网站的时候，Referer的情况就比较杂乱，不太可信。
+1. IE6、7下使用window.location.href=url进行界面的跳转，会丢失Referer。
+2. IE6、7下使用window.open，也会缺失Referer。
+3. HTTPS页面跳转到HTTP页面，所有浏览器Referer都丢失。
+4. 点击Flash上到达另外一个网站的时候，Referer的情况就比较杂乱，不太可信。
 
 ##### 无法确认来源域名情况
 
@@ -576,3 +554,5 @@ id=[VIDEO ID]&playlist_id=&add_to_favorite=1&show=1&button=AddvideoasFavorite"/>
 - Gmail Security Hijack Case.[Google-Gmail-Security-Hijack](https://link.juejin.cn/?target=https%3A%2F%2Fwww.davidairey.com%2Fgoogle-gmail-security-hijack%2F).
 - Netsparker Blog.[Same-Site-Cookie-Attribute-Prevent-Cross-site-Request-Forgery](https://link.juejin.cn/?target=https%3A%2F%2Fwww.netsparker.com%2Fblog%2Fweb-security%2Fsame-site-cookie-attribute-prevent-cross-site-request-forgery%2F)
 - MDN.[Same-origin_policy#IE_Exceptions](https://link.juejin.cn/?target=https%3A%2F%2Fdeveloper.mozilla.org%2Fen-US%2Fdocs%2FWeb%2FSecurity%2FSame-origin_policy%23IE_Exceptions)
+
+对照：[前端安全系列之二：如何防止CSRF攻击？](https://juejin.cn/post/6844903689702866952)

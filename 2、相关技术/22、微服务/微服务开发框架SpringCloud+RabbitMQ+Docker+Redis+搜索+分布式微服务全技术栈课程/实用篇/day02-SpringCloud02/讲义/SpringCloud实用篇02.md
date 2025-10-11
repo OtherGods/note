@@ -822,6 +822,8 @@ public class AuthorizeFilter implements GlobalFilter {
 
 ### 3.6.3.解决跨域问题
 
+对照：[18、什么是跨域访问问题，如何解决？](5、计算机网络/Hollis/18、什么是跨域访问问题，如何解决？.md)
+
 在gateway服务的application.yml文件中，添加下面的配置：
 ```yaml
 spring:
