@@ -1,29 +1,20 @@
-# 安装elasticsearch
-
-
-
 # 1.部署单点es
 
 ## 1.1.创建网络
 
 因为我们还需要部署kibana容器，因此需要让es和kibana容器互联。这里先创建一个网络：
-
 ```sh
 docker network create es-net
 ```
-
-
 
 ## 1.2.加载镜像
 
 这里我们采用elasticsearch的7.12.1版本的镜像，这个镜像体积非常大，接近1G。不建议大家自己pull。
 
 课前资料提供了镜像的tar包：
-
-![image-20210510165308064](2、相关技术/22、微服务/微服务开发框架SpringCloud+RabbitMQ+Docker+Redis+搜索+分布式微服务全技术栈课程/实用篇/day05-Elasticsearch01/资料/assets/image-20210510165308064.png)
+![image-20210510165308064.png](https://raw.githubusercontent.com/OtherGods/MaterialImage/main/img/202510121608241.png)
 
 大家将其上传到虚拟机中，然后运行命令加载即可：
-
 ```sh
 # 导入数据
 docker load -i es.tar
@@ -31,12 +22,9 @@ docker load -i es.tar
 
 同理还有`kibana`的tar包也需要这样做。
 
-
-
 ## 1.3.运行
 
 运行docker命令，部署单点es：
-
 ```sh
 docker run -d \
 	--name es \
@@ -52,7 +40,6 @@ elasticsearch:7.12.1
 ```
 
 命令解释：
-
 - `-e "cluster.name=es-docker-cluster"`：设置集群名称
 - `-e "http.host=0.0.0.0"`：监听的地址，可以外网访问
 - `-e "ES_JAVA_OPTS=-Xms512m -Xmx512m"`：内存大小
@@ -64,15 +51,8 @@ elasticsearch:7.12.1
 - `--network es-net` ：加入一个名为es-net的网络中
 - `-p 9200:9200`：端口映射配置
 
-
-
 在浏览器中输入：http://192.168.150.101:9200 即可看到elasticsearch的响应结果：
-
-![image-20210506101053676](2、相关技术/22、微服务/微服务开发框架SpringCloud+RabbitMQ+Docker+Redis+搜索+分布式微服务全技术栈课程/实用篇/day05-Elasticsearch01/资料/assets/image-20210506101053676.png)
-
-
-
-
+![image-20210506101053676.png](https://raw.githubusercontent.com/OtherGods/MaterialImage/main/img/202510121608661.png)
 
 # 2.部署kibana
 
@@ -81,7 +61,6 @@ kibana可以给我们提供一个elasticsearch的可视化界面，便于我们�
 ## 2.1.部署
 
 运行docker命令，部署kibana
-
 ```sh
 docker run -d \
 --name kibana \
@@ -90,36 +69,28 @@ docker run -d \
 -p 5601:5601  \
 kibana:7.12.1
 ```
-
 - `--network es-net` ：加入一个名为es-net的网络中，与elasticsearch在同一个网络中
 - `-e ELASTICSEARCH_HOSTS=http://es:9200"`：设置elasticsearch的地址，因为kibana已经与elasticsearch在一个网络，因此可以用容器名直接访问elasticsearch
 - `-p 5601:5601`：端口映射配置
 
 kibana启动一般比较慢，需要多等待一会，可以通过命令：
-
 ```sh
 docker logs -f kibana
 ```
 
 查看运行日志，当查看到下面的日志，说明成功：
-
-![image-20210109105135812](2、相关技术/22、微服务/微服务开发框架SpringCloud+RabbitMQ+Docker+Redis+搜索+分布式微服务全技术栈课程/实用篇/day05-Elasticsearch01/资料/assets/image-20210109105135812.png)
+![image-20210109105135812.png](https://raw.githubusercontent.com/OtherGods/MaterialImage/main/img/202510121609574.png)
 
 此时，在浏览器输入地址访问：http://192.168.150.101:5601，即可看到结果
 
 ## 2.2.DevTools
 
 kibana中提供了一个DevTools界面：
-
-![image-20210506102630393](2、相关技术/22、微服务/微服务开发框架SpringCloud+RabbitMQ+Docker+Redis+搜索+分布式微服务全技术栈课程/实用篇/day05-Elasticsearch01/资料/assets/image-20210506102630393.png)
+![image-20210506102630393.png](https://raw.githubusercontent.com/OtherGods/MaterialImage/main/img/202510121609458.png)
 
 这个界面中可以编写DSL来操作elasticsearch。并且对DSL语句有自动补全功能。
 
-
-
 # 3.安装IK分词器
-
-
 
 ## 3.1.在线安装ik插件（较慢）
 
@@ -141,13 +112,11 @@ docker restart elasticsearch
 ### 1）查看数据卷目录
 
 安装插件需要知道elasticsearch的plugins目录位置，而我们用了数据卷挂载，因此需要查看elasticsearch的数据卷目录，通过下面命令查看:
-
 ```sh
 docker volume inspect es-plugins
 ```
 
 显示结果：
-
 ```json
 [
     {
@@ -164,23 +133,17 @@ docker volume inspect es-plugins
 
 说明plugins目录被挂载到了：`/var/lib/docker/volumes/es-plugins/_data `这个目录中。
 
-
-
 ### 2）解压缩分词器安装包
 
 下面我们需要把课前资料中的ik分词器解压缩，重命名为ik
-
-![image-20210506110249144](2、相关技术/22、微服务/微服务开发框架SpringCloud+RabbitMQ+Docker+Redis+搜索+分布式微服务全技术栈课程/实用篇/day05-Elasticsearch01/资料/assets/image-20210506110249144.png)
+![image-20210506110249144.png](https://raw.githubusercontent.com/OtherGods/MaterialImage/main/img/202510121610239.png)
 
 ### 3）上传到es容器的插件数据卷中
 
 也就是`/var/lib/docker/volumes/es-plugins/_data `：
+![image-20210506110704293.png](https://raw.githubusercontent.com/OtherGods/MaterialImage/main/img/202510121610380.png)
 
-![image-20210506110704293](2、相关技术/22、微服务/微服务开发框架SpringCloud+RabbitMQ+Docker+Redis+搜索+分布式微服务全技术栈课程/实用篇/day05-Elasticsearch01/资料/assets/image-20210506110704293.png)
-
-
-
-###  4）重启容器
+### 4）重启容器
 
 ```shell
 # 4、重启容器
@@ -195,13 +158,8 @@ docker logs -f es
 ### 5）测试：
 
 IK分词器包含两种模式：
-
 * `ik_smart`：最少切分
-
 * `ik_max_word`：最细切分
-
-
-
 ```json
 GET /_analyze
 {
@@ -211,7 +169,6 @@ GET /_analyze
 ```
 
 结果：
-
 ```json
 {
   "tokens" : [
@@ -282,61 +239,48 @@ GET /_analyze
 }
 ```
 
-
-
-
-
 ## 3.3 扩展词词典
 
 随着互联网的发展，“造词运动”也越发的频繁。出现了很多新的词语，在原有的词汇列表中并不存在。比如：“奥力给”，“传智播客” 等。
 
 所以我们的词汇也需要不断的更新，IK分词器提供了扩展词汇的功能。
 
-1）打开IK分词器config目录：
+1. 打开IK分词器config目录：
+   ![image-20210506112225508.png](https://raw.githubusercontent.com/OtherGods/MaterialImage/main/img/202510121612595.png)
+2. 在IKAnalyzer.cfg.xml配置文件内容添加：
+	```xml
+	<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+	<properties>
+	        <comment>IK Analyzer 扩展配置</comment>
+	        <!--用户可以在这里配置自己的扩展字典 *** 添加扩展词典-->
+	        <entry key="ext_dict">ext.dic</entry>
+	</properties>
+	```
 
-![image-20210506112225508](2、相关技术/22、微服务/微服务开发框架SpringCloud+RabbitMQ+Docker+Redis+搜索+分布式微服务全技术栈课程/实用篇/day05-Elasticsearch01/资料/assets/image-20210506112225508.png)
+3. 新建一个 ext.dic，可以参考config目录下复制一个配置文件进行修改
+	```
+	传智播客
+	奥力给
+	```
 
-2）在IKAnalyzer.cfg.xml配置文件内容添加：
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
-<properties>
-        <comment>IK Analyzer 扩展配置</comment>
-        <!--用户可以在这里配置自己的扩展字典 *** 添加扩展词典-->
-        <entry key="ext_dict">ext.dic</entry>
-</properties>
-```
-
-3）新建一个 ext.dic，可以参考config目录下复制一个配置文件进行修改
-
-```properties
-传智播客
-奥力给
-```
-
-4）重启elasticsearch 
-
-```sh
-docker restart es
-
-# 查看 日志
-docker logs -f elasticsearch
-```
-
-![image-20201115230900504](2、相关技术/22、微服务/微服务开发框架SpringCloud+RabbitMQ+Docker+Redis+搜索+分布式微服务全技术栈课程/实用篇/day05-Elasticsearch01/资料/assets/image-20201115230900504.png)
-
-日志中已经成功加载ext.dic配置文件
-
-5）测试效果：
-
-```json
-GET /_analyze
-{
-  "analyzer": "ik_max_word",
-  "text": "传智播客Java就业超过90%,奥力给！"
-}
-```
+4. 重启elasticsearch 
+	```sh
+	docker restart es
+	
+	# 查看 日志
+	docker logs -f elasticsearch
+	```
+![image-20201115230900504.png](https://raw.githubusercontent.com/OtherGods/MaterialImage/main/img/202510121613480.png)
+	日志中已经成功加载ext.dic配置文件
+5. 测试效果：
+	```json
+	GET /_analyze
+	{
+	  "analyzer": "ik_max_word",
+	  "text": "传智播客Java就业超过90%,奥力给！"
+	}
+	```
 
 > 注意当前文件的编码必须是 UTF-8 格式，严禁使用Windows记事本编辑
 
@@ -346,63 +290,48 @@ GET /_analyze
 
 IK分词器也提供了强大的停用词功能，让我们在索引时就直接忽略当前的停用词汇表中的内容。
 
-1）IKAnalyzer.cfg.xml配置文件内容添加：
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
-<properties>
-        <comment>IK Analyzer 扩展配置</comment>
-        <!--用户可以在这里配置自己的扩展字典-->
-        <entry key="ext_dict">ext.dic</entry>
-         <!--用户可以在这里配置自己的扩展停止词字典  *** 添加停用词词典-->
-        <entry key="ext_stopwords">stopword.dic</entry>
-</properties>
-```
-
-3）在 stopword.dic 添加停用词
-
-```properties
-习大大
-```
-
-4）重启elasticsearch 
-
-```sh
-# 重启服务
-docker restart elasticsearch
-docker restart kibana
-
-# 查看 日志
-docker logs -f elasticsearch
-```
-
-日志中已经成功加载stopword.dic配置文件
-
-5）测试效果：
-
-```json
-GET /_analyze
-{
-  "analyzer": "ik_max_word",
-  "text": "传智播客Java就业率超过95%,习大大都点赞,奥力给！"
-}
-```
+1. IKAnalyzer.cfg.xml配置文件内容添加：
+	```xml
+	<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+	<properties>
+	        <comment>IK Analyzer 扩展配置</comment>
+	        <!--用户可以在这里配置自己的扩展字典-->
+	        <entry key="ext_dict">ext.dic</entry>
+	         <!--用户可以在这里配置自己的扩展停止词字典  *** 添加停用词词典-->
+	        <entry key="ext_stopwords">stopword.dic</entry>
+	</properties>
+	```
+2. 在 stopword.dic 添加停用词
+	```
+	习大大
+	```
+3. 重启elasticsearch 
+	```sh
+	# 重启服务
+	docker restart elasticsearch
+	docker restart kibana
+	
+	# 查看 日志
+	docker logs -f elasticsearch
+	```
+	日志中已经成功加载stopword.dic配置文件
+4. 测试效果：
+	```json
+	GET /_analyze
+	{
+	  "analyzer": "ik_max_word",
+	  "text": "传智播客Java就业率超过95%,习大大都点赞,奥力给！"
+	}
+	```
 
 > 注意当前文件的编码必须是 UTF-8 格式，严禁使用Windows记事本编辑
-
-
-
-
 
 # 4.部署es集群
 
 部署es集群可以直接使用docker-compose来完成，不过要求你的Linux虚拟机至少有**4G**的内存空间
 
-
-
 首先编写一个docker-compose文件，内容如下：
-
 ```sh
 version: '2.2'
 services:
@@ -476,10 +405,7 @@ networks:
     driver: bridge
 ```
 
-
-
 Run `docker-compose` to bring up the cluster:
-
 ```sh
 docker-compose up
 ```

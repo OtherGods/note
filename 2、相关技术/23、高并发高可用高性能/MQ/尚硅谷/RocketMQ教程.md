@@ -42,7 +42,6 @@ MQ，Message Queue，是一种提供消息队列服务的中间件，也称为�
 ### 1.1.4、MQ常见协议
 
 一般情况下MQ的实现是要遵循一些常规性协议的。常见的协议如下：
-
 ###### JMS
 > JMS，Java Messaging Service（Java消息服务）。是Java平台上有关MOM（Message OrientedMiddleware，面向消息的中间件 PO/OO/AO）的技术规范，它便于消息系统中的Java应用程序进行消息交换，并且通过提供标准的产生、发送、接收消息的接口，简化企业应用的开发。ActiveMQ是该协议的典型实现。
 
