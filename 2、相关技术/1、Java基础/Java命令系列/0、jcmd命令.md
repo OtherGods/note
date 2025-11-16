@@ -245,7 +245,8 @@ java -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=7777 -Dc
 1. 关闭防火墙（CentOS为例）：firewall-cmd –state 查看防火墙状态、`systemctl stop firewalld.service` 停止
 2. 修改hosts文件为真实IP（vim /etc/hosts），使用hostname –i 查看是否为真实IP，而不是127.0.0.1这种
 	- `vim /etc/hosts` 
-	- 重启java应用(因启动时已经加载了这个值)，否则hosts修改了也没用
+		- 重启java应用(因启动时已经加载了这个值)，否则hosts修改了也没用
+	- 或使用JVM参数：`-Djava.rmi.server.hostname=真实IP`
 
 ### jcmd jfr
 
