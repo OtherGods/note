@@ -1,4 +1,4 @@
-#AIO #BIO #NIO
+#IO #AIO #BIO #NIO
 # 1、典型回答
 
 **BIO （Blocking I/O）**：同步阻塞I/O，是JDK1.4之前的传统IO模型。 线程发起IO请求后，一直阻塞，直到缓冲区数据就绪后，再进入下一步操作。
