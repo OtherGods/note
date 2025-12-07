@@ -13,7 +13,7 @@
 4. 案例经典：聊天室采用自定义协议实现，并加入可扩展的序列化机制；RPC案例采用代理来封装网络远程调用，并使用Promise来处理异步结果，虽然小巧，但绝不是Helloworld
 
 **课程内容**
-1. NIO编程：详细讲解NIO的Selector、ByteBuffer和CHannel三大组件，建议即使之前有NIO基础的同学也不要错过这一部分的学习，里面有能够回答和你之前学习NIO时很多疑问
+1. NIO编程：详细讲解NIO的Selector、ByteBuffer和Channel三大组件，建议即使之前有NIO基础的同学也不要错过这一部分的学习，里面有能够回答和你之前学习NIO时很多疑问
 2. Netty入门学习：介绍EventLook、Channel、Future、Pileline、Handler、ByteBuf等重要组件，同样能回答你以前琢磨不清的一些问题
 3. Netty进阶学习：介绍粘包半包的解决方法、协议的设置、序列化知识、使用聊天室案例将这些知识点串联起来，为了让大家专注Netty编程，并没有引第三方框架，像Spring、WebSocket等，免得分散注意力
 4. Netty常见参数学习以及优化
@@ -57,7 +57,6 @@ non-blocking io 非阻塞 IO
 ### 1.1.1、 Channel & Buffer
 
 channel 有一点类似于 stream，它就是 **==读写数据的双向通道==** ，可以从 channel 将数据读入 buffer，也可以将 buffer 的数据写入 channel，而之前的 stream 要么是输入，要么是输出，channel 比 stream 更为底层；**==buffer是应用程序和磁盘/网络之间数据交互的桥梁，是用来暂存数据的缓冲区==**。
-
 ```mermaid
 graph LR
 channel --> buffer
@@ -89,7 +88,6 @@ selector 单从字面意思不好理解，需要结合服务器的设计演化�
 #### 1.1.2.1、多线程版设计
 
 NIO未出现之前服务器端程序使用多线程来实现
-
 ```mermaid
 graph TD
 subgraph 多线程版
@@ -106,7 +104,6 @@ end
 #### 1.1.2.2、线程池版设计
 
 对多线程版的优化
-
 ```mermaid
 graph TD
 subgraph 线程池版
@@ -123,7 +120,6 @@ end
 #### 1.1.2.3、selector 版设计
 
 selector 的作用就是配合一个线程来管理多个 channel，获取这些 channel 上发生的事件，这些 **channel 工作在非阻塞模式下，不会让线程吊死在一个 channel 上**。**==适合连接数特别多，但channel流量低的场景（low traffic）==**
-
 ```mermaid
 graph TD
 subgraph selector 版
@@ -139,13 +135,11 @@ end
 ## 1.2、ByteBuffer
 
 有一普通文本文件 data.txt，内容为
-
 ```
 1234567890abcd
 ```
 
 使用 `FileChannel` 来读取文件内容
-
 ```java
 @Slf4j
 public class ChannelDemo1 {
@@ -177,7 +171,6 @@ public class ChannelDemo1 {
 ```
 
 输出
-
 ```
 10:39:03 [DEBUG] [main] c.i.n.ChannelDemo1 - 读到字节数：10
 10:39:03 [DEBUG] [main] c.i.n.ChannelDemo1 - 1
@@ -416,7 +409,7 @@ Bytebuffer buf = ByteBuffer.allocate(16);
 Bytebuffer buf = ByteBuffer.allocateDire(16);
 ```
 
-#### 1.2.3.2、向 buffer 写入数据
+#### 1.2.3.2、channel或应用向 buffer 写入数据
 
 有两种办法
 * 调用 channel 的 read 方法
@@ -429,7 +422,7 @@ int readBytes = channel.read(buf);
 buf.put((byte)127);
 ```
 
-#### 1.2.3.3、从 buffer 读取数据
+#### 1.2.3.3、channel或应用从 buffer 读取数据
 
 同样有两种办法
 * 调用 channel 的 `write` 方法
@@ -458,8 +451,8 @@ mark 是在读取时，做一个标记，即使 position 改变，只要调用 r
 ByteBuffer buffer1 = StandardCharsets.UTF_8.encode("你好");
 ByteBuffer buffer2 = Charset.forName("utf-8").encode("你好");
 
-debug(buffer1);
-debug(buffer2);
+debugAll(buffer1);
+debugAll(buffer2);
 
 CharBuffer buffer3 = StandardCharsets.UTF_8.decode(buffer1);
 System.out.println(buffer3.getClass());
@@ -505,9 +498,9 @@ try (RandomAccessFile file = new RandomAccessFile("helloword/3parts.txt", "rw"))
     a.flip();
     b.flip();
     c.flip();
-    debug(a);
-    debug(b);
-    debug(c);
+    debugAll(a);
+    debugAll(b);
+    debugAll(c);
 } catch (IOException e) {
     e.printStackTrace();
 }
@@ -547,8 +540,8 @@ try (RandomAccessFile file = new RandomAccessFile("helloword/3parts.txt", "rw"))
     e.put(new byte[]{'f', 'i', 'v', 'e'});
     d.flip();
     e.flip();
-    debug(d);
-    debug(e);
+    debugAll(d);
+    debugAll(e);
     channel.write(new ByteBuffer[]{d, e});
 } catch (IOException e) {
     e.printStackTrace();
@@ -578,15 +571,19 @@ onetwothreefourfive
 
 网络上有多条数据发送给服务端，数据之间使用 $\n$ 进行分隔
 但由于某种原因这些数据在接收时，被进行了重新组合，例如原始数据有3条为
-* Hello,world\n
-* I'm zhangsan\n
-* How are you?\n
+```
+Hello,world\n
+I'm zhangsan\n
+How are you?\n
+```
 
 变成了下面的两个 byteBuffer (黏包，半包)
-* Hello,world\nI'm zhangsan\nHo
-* w are you?\n
+```
+Hello,world\nI'm zhangsan\nHo
+w are you?\n
+```
 
-现在要求你编写程序，将错乱的数据恢复成原始的按 \n 分隔的数据
+现在要求你编写程序，将错乱的数据恢复成原始的按 $\n$ 分隔的数据
 ```java
 public static void main(String[] args) {
     ByteBuffer source = ByteBuffer.allocate(32);
@@ -779,13 +776,13 @@ d:\data\projects\b
 
 ### 1.3.4、Files
 
-检查文件是否存在
+**检查文件是否存在**
 ```java
 Path path = Paths.get("helloword/data.txt");
 System.out.println(Files.exists(path));
 ```
 
-创建一级目录
+**创建一级目录**
 ```java
 Path path = Paths.get("helloword/d1");
 Files.createDirectory(path);
@@ -793,13 +790,13 @@ Files.createDirectory(path);
 * 如果目录已存在，会抛异常 FileAlreadyExistsException
 * 不能一次创建多级目录，否则会抛异常 NoSuchFileException
 
-创建多级目录用
+**创建多级目录用**
 ```java
 Path path = Paths.get("helloword/d1/d2");
 Files.createDirectories(path);
 ```
 
-拷贝文件
+**拷贝文件**
 ```java
 Path source = Paths.get("helloword/data.txt");
 Path target = Paths.get("helloword/target.txt");
@@ -813,7 +810,7 @@ Files.copy(source, target);
 Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);
 ```
 
-移动文件
+**移动文件**
 ```java
 Path source = Paths.get("helloword/data.txt");
 Path target = Paths.get("helloword/data.txt");
@@ -822,7 +819,7 @@ Files.move(source, target, StandardCopyOption.ATOMIC_MOVE);
 ```
 * StandardCopyOption.ATOMIC_MOVE 保证文件移动的原子性
 
-删除文件
+**删除文件**
 ```java
 Path target = Paths.get("helloword/target.txt");
 
@@ -830,7 +827,7 @@ Files.delete(target);
 ```
 * 如果文件不存在，会抛异常 NoSuchFileException
 
-删除目录
+**删除目录**
 ```java
 Path target = Paths.get("helloword/d1");
 
@@ -838,7 +835,7 @@ Files.delete(target);
 ```
 * 如果目录还有内容，会抛异常 DirectoryNotEmptyException
 
-遍历目录文件
+**遍历目录文件**
 ```java
 public static void main(String[] args) throws IOException {
     Path path = Paths.get("C:\\Program Files\\Java\\jdk1.8.0_91");
@@ -866,7 +863,7 @@ public static void main(String[] args) throws IOException {
 }
 ```
 
-统计 jar 的数目
+**统计 jar 的数目**
 ```java
 Path path = Paths.get("C:\\Program Files\\Java\\jdk1.8.0_91");
 AtomicInteger fileCount = new AtomicInteger();
@@ -883,7 +880,7 @@ Files.walkFileTree(path, new SimpleFileVisitor<Path>(){
 System.out.println(fileCount); // 724
 ```
 
-删除多级目录
+**删除多级目录**
 ```java
 Path path = Paths.get("d:\\a");
 Files.walkFileTree(path, new SimpleFileVisitor<Path>(){
@@ -903,11 +900,9 @@ Files.walkFileTree(path, new SimpleFileVisitor<Path>(){
 });
 ```
 
-#### 1.3.4.1、删除很危险
-
 > 删除是危险操作，确保要递归删除的文件夹没有重要内容
 
-拷贝多级目录
+**拷贝多级目录**
 ```java
 long start = System.currentTimeMillis();
 String source = "D:\\Snipaste-1.16.2-x64";
@@ -1774,6 +1769,8 @@ public class UdpClient {
 UNIX 网络编程 - 卷 I
 
 ### 1.5.3、零拷贝
+
+参考：[5、什么是零拷贝？](4、操作系统/Hollis/5、什么是零拷贝？.md)
 
 #### 1.5.3.1、传统 IO 问题
 
